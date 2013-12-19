@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/*
+ * Portal App
+ * Copyright (C) 2012 Stackops Technologies
+ */
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <!-- POM Relationships -->
+
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.stackops.portal.plugins</groupId>
+        <artifactId>parent</artifactId>
+        <version>1.1.1</version>
+        <relativePath>../parent</relativePath>
+    </parent>
+
+    <artifactId>firewall-portal-plugin</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+
+    <properties>
+        <plugin.key>firewall</plugin.key>
+        <plugin.portal.version>1.1.1</plugin.portal.version>
+        <plugin.name>Firewall Portal Plugin</plugin.name>
+        <plugin.description>Firewall App plugin for Portal</plugin.description>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.stackops</groupId>
+            <artifactId>portal-plugin-api</artifactId>
+            <version>1.1.0</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <!-- ///////////////// -->
+
+    <!-- Build Settings -->
+
+    <packaging>jar</packaging>
+    <build>
+        <finalName>${project.artifactId}-${project.version}</finalName>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>yuicompressor-maven-plugin</artifactId>
+		<version>1.3.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compress</goal>
+                        </goals>
+                        <phase>process-sources</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <jswarn>false</jswarn>
+		    <webappDirectory>${project.build.directory}/compressed</webappDirectory>
+                    <sourceDirectory>src/main/resources</sourceDirectory>
+                    <aggregations>
+                        <aggregation>
+                            <removeIncluded>true</removeIncluded>
+                            <includes>
+                                <include>**/locale/Language-min.js</include>
+                                <include>**/model/Firewall_Rule-min.js</include>
+                                <include>**/model/Firewalls-min.js</include>
+                                <include>**/model/Firewall-min.js</include>
+                                <include>**/model/Policy-min.js</include>
+                                <include>**/model/Rules-min.js</include>
+                                <include>**/model/Subnet-min.js</include>
+                                
+                                
+                                <include>**/store/Firewall-min.js</include>
+                                <include>**/store/Policy-min.js</include>
+                                <include>**/store/Rules-min.js</include>
+                                <include>**/store/Subnet-min.js</include>
+                                
+                                <include>**/view/StToolbar-min.js</include>
+                                <include>**/view/HelpContainer-min.js</include>
+                                <include>**/view/FirewallEdit-min.js</include>
+                                <include>**/view/FirewallCreate-min.js</include>
+                                <include>**/view/PolicyEdit-min.js</include>
+                                <include>**/view/PolicyCreate-min.js</include>
+                                <include>**/view/RuleCreate-min.js</include>
+                                <include>**/view/RuleEdit-min.js</include>
+                                <include>**/view/RuleInsert-min.js</include>
+                                <include>**/view/FirewallGrid-min.js</include>
+                                <include>**/view/PolicyGrid-min.js</include>
+                                <include>**/view/RulesGrid-min.js</include> 
+								<include>**/view/EmptyPanel-min.js</include>
+								<include>**/view/UpTree-min.js</include>								
+								<include>**/view/FwaasPluginPanel-min.js</include> 
+								<include>**/controller/UpTree-min.js</include>	
+                                <include>**/FirewallPluginDescriptor-min.js</include> 
+                            </includes>
+                            <output>${project.build.outputDirectory}/firewall/firewall-classes.js</output>
+                        </aggregation>
+                    </aggregations>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>2.1.2</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>dependencies</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+        </plugins>
+    </reporting>
+
+    <!-- ////////////// -->
+
+    <!-- Project Information -->
+
+    <name>Firewall Portal Plugin</name>
+    <description>Firewall Portal Plugin</description>
+
+    <!-- /////////////////// -->
+
+</project>

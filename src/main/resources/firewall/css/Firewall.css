@@ -1,0 +1,137 @@
+.fwplugin-shortcut {
+    background-image: url(../images/fw_48.png) !important;
+}
+
+.fwplugin-icon {
+     background-image: url(../images/fw_16.png) !important;
+}
+
+.firewall-ver {
+     background-image: url(../images/ver.png) !important;
+}
+.fw-create-icon {
+	background-image: url(../images/fw-create.png) !important;
+}
+.fw-delete-icon {
+	background-image: url(../images/fw-delete.png) !important;
+}
+
+.fw-dow-icon {
+	background-image: url(../images/fw-down.png) !important;
+}
+.fw-up-icon {
+	background-image: url(../images/fw-up-icon.png) !important;
+}
+.fw-ok-icon {
+	background-image: url(../images/fw-ok.png) !important;
+}
+
+.fw-edit-icon {
+	background-image: url(../images/edit_16x16.png) !important;
+}
+
+.fw-port-icon {
+	background-image: url(../images/port_16x16.png) !important;
+}
+
+.fw-policy-icon {
+	background-image: url(../images/policy_16.png) !important;
+}
+
+.fw-firewall-icon {
+	background-image: url(../images/fw-firewall.png) !important;
+}
+
+.rule-create-icon {
+	background-image: url(../images/ruler-add-icon.png) !important;
+}
+
+.rule-delete-icon {
+	background-image: url(../images/ruler-delete-icon.png) !important;
+}
+
+.rule-edit-icon {
+	background-image: url(../images/ruler-edit-icon.png) !important;
+	
+}
+
+.rule-icon {
+	background-image: url(../images/ruler-icon.png) !important;
+}
+
+.firewall-item{
+	background-image: url(../images/fw-item.png) !important;
+}
+
+
+.background-contianer{
+	background-color: #E9E9E9 !important;
+	padding: 5px 5px 5px 16px !important;
+	background: #E9E9E9 !important;
+}
+
+
+.fwaas-container-white-icon{
+	background : white;
+}
+
+.fwaas-create-icon{
+	background-image: url(../images/fw-create-icon.png) !important;
+}
+
+.fwaas-delete-icon{
+	background-image: url(../images/fw-delete-icon.png) !important;
+}
+
+.fwaas-edit-icon{
+	background-image: url(../images/fw-edit-icon.png) !important;
+}
+
+.policy-create-icon{
+	background-image: url(../images/policy-create-icon.png) !important;
+}
+
+.policy-delete-icon{
+	background-image: url(../images/policy-delete-icon.png) !important;
+}
+
+.policy-edit-icon{
+	background-image: url(../images/policy-edit-icon.png) !important;
+}
+
+.policy-add-rule{
+	background-image: url(../images/policy-add-rule-icon.png) !important;
+}
+.policy-remove-rule{
+	background-image: url(../images/policy-remove-rule-icon.png) !important;
+}
+.policy-icon {
+	background-image: url(../images/policy-icon.png) !important;
+}
+
+.tree-icons {
+	background-image: url(../images/head-arrow.png) !important;
+	background-repeat: no-repeat;
+
+}
+
+.fwaas-container-white-icon{
+        background : white !important;
+}
+
+.audit-icon{
+	background-image: url(../images/audited.png) !important;
+}
+
+.enable-rule-icon{
+	background-image: url(../images/enable.png) !important;
+}
+
+.disable-rule-icon{
+	background-image: url(../images/disable.png) !important;
+}
+
+.firewall-info-detail{
+	background-image: url(../images/detail_16x16.png) !important;
+}
+
