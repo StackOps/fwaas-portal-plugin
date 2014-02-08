@@ -1,79 +1,76 @@
 Ext.define('Stackops.portal.plugin.firewall.FirewallPluginDescriptor', {
-    extend: 'Stackops.portal.PluginDescriptor',
-    controllers: ['Stackops.portal.plugin.firewall.controller.UpTree'],
-    requires: ['Stackops.portal.plugin.firewall.view.FwaasPluginPanel'],
-    debug: true,
-    id: 'firewall-win',
-    shortcutTitle: Portal.getText('firewall', 'pluginName'),
-    shortcutCls: 'fwplugin-shortcut',
-    init : function(){
-    	Portal.firewall = {};
-        this.launcher = {
-            text: Portal.getText('firewall', 'pluginName'),
-            handler : this.createWindow,
-            iconCls: 'fwplugin-icon',
-            scope: this
-        };
-        
-        
-          Ext.override(Ext.LoadMask, { 
-            toFront: function(preventFocus) {
-                var me = this;
-                if (me.zIndexManager.bringToFront(me)) {
-                    if (!Ext.isDefined(preventFocus)) {
-                        preventFocus = !me.focusOnToFront;
-                    }
-                    if (!preventFocus) {
-                        me.focus(false, true);
-                    }
-                }
-                return me;
-            }
-        });
-        
-        if (Portal.intercept_help != true) {
-			Portal.intercept_help = true;
-			Ext.Function.interceptBefore(Ext.form.Field.prototype, 'initComponent', function() {
-				
-				var f = this.fieldLabel, fl = this.labelSeparator, h = this.fwaashelpText, i =this.fwaasInfo, oo = this.fwaasmandatory;
-				
-				if (h && h !== '' && fl) {
-					//this.labelSeparator = fl+'<span style="font-weight:bold; color:red;" data-qtip="'+h+'">'+" *"+'</span> ';					
-					//this.labelSeparator =fl + '<span style="font-weight:bold; color:#5882FA; font-size: 15px;" data-qtip="' + h + '">' + " *" + '</span> ';					
-					this.fieldLabel = '<span data-qtip="' + h + '">' + f +'</span>';					
-					//this.labelSeparator = fl+'<img align="middle" src="../portal/plugin/static/fwaas/images/info-icon.png" data-qtip="'+h+'"</img>';
-					//this.labelSeparator = fl + '<span style="font-weight:bold; color:#5882FA; font-size: 15px;" data-qtip=">' + " *" + '</span> ';
-				}
-				else if(i && i !== '' && fl){
-					this.labelSeparator = fl+'<img align="middle" src="../portal/plugin/static/fwaas/images/info-icon.png" data-qtip="'+i+'"</img>';
-				}
-				else if(oo && oo !== '' && fl){
-					this.labelSeparator = fl + '<span style="font-weight:bold; color:red; font-size: 15px;" data-qtip="' + "mandatory" + '">' + " *" + '</span> ';
-				}
-				
+	extend : 'Stackops.portal.PluginDescriptor',
+	controllers : ['Stackops.portal.plugin.firewall.controller.UpTree'],
+	requires : ['Stackops.portal.plugin.firewall.view.FwaasPluginPanel'],
+	debug : true,
+	id : 'firewall-win',
+	shortcutTitle : Portal.getText('firewall', 'pluginName'),
+	shortcutCls : 'fwplugin-shortcut',
+	init : function() {
+		Portal.firewall = {};
+		this.launcher = {
+			text : Portal.getText('firewall', 'pluginName'),
+			handler : this.createWindow,
+			iconCls : 'fwplugin-icon',
+			scope : this
+		};
+		
+		Ext.MessageBox.msgButtons['yes'].text = Portal.getText('firewall', 'yes');
+		Ext.MessageBox.msgButtons['no'].text = Portal.getText('firewall', 'no');
 
+		var cidrTest = /^((([0-9])|([1-9][0-9])|([1][0-9][0-9])|([2][0-4][0-9])|(25[0-5]))[.]){3}(([0-9])|([1-9][0-9])|([1][0-9][0-9])|([2][0-4][0-9])|(25[0-5]))(\/([0-9]|[1-2][0-9]|3[0-2])){0,1}$/;
+		Ext.apply(Ext.form.field.VTypes, {
+			cidr : function(val, field) {
+				return cidrTest.test(val);
+			},
+			cidrText : Portal.getText('firewall', 'rule-create-vtype-cidr-text'),
+			cidrMask : /[\d\.\/]/i
+		});
+
+		var portsTest = /^([0-9]|[1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|(65)[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])(:([0-9]|[1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|(65)[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])){0,1}$/;
+		Ext.apply(Ext.form.field.VTypes, {
+			ports : function(val, field) {
+				return portsTest.test(val);
+			},
+			portsText : Portal.getText('firewall', 'rule-create-vtype-ports-text'),
+			portsMask : /[\d\:]/i
+		});
+
+		Ext.override(Ext.LoadMask, {
+			toFront : function(preventFocus) {
+				var me = this;
+				if (me.zIndexManager.bringToFront(me)) {
+					if (!Ext.isDefined(preventFocus)) {
+						preventFocus = !me.focusOnToFront;
+					}
+					if (!preventFocus) {
+						me.focus(false, true);
+					}
+				}
+				return me;
+			}
+		});
+
+	},
+	createWindow : function() {
+		var desktop = this.app.getDesktop();
+		var win = desktop.getWindow(this.id);
+		if (!win) {
+			win = desktop.createWindow({
+				id : this.id,
+				title : Portal.getText('firewall', 'pluginName'),
+				width : 1024,
+				height : 480,
+				animCollapse : false,
+				iconCls : 'fwplugin-icon',
+				constrainHeader : true,
+				layout : 'fit',
+				items : [{
+					xtype : 'fwaaspluginpanel'
+				}]
 			});
 		}
-    },
-    createWindow : function() {
-        var desktop = this.app.getDesktop();
-        var win = desktop.getWindow(this.id);
-        if(!win){
-            win = desktop.createWindow({
-                id: this.id,
-                title: Portal.getText('firewall', 'pluginName'),
-                width:1024,
-                height:480,
-                animCollapse:false,
-                iconCls: 'fwplugin-icon',
-                constrainHeader:true,
-                layout: 'fit',
-                items: [{
-                    xtype: 'fwaaspluginpanel'
-                }]
-            });
-        }
-        win.show();
-        return win;
-    }
-});
+		win.show();
+		return win;
+	}
+}); 

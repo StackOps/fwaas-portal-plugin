@@ -29,7 +29,8 @@ Ext.define('Stackops.portal.plugin.firewall.view.FirewallGrid', {
     	me.store = Ext.create('Ext.data.Store', {
 		    model: 'Stackops.portal.plugin.firewall.model.Rules',
 		    proxy   : {type    : 'memory'}, 
-		    data : []
+		    data : [],
+		    sorters : ['position']
 		});
 		
 		me.firewall_store = Ext.create('Stackops.portal.plugin.firewall.store.Firewall');
@@ -43,46 +44,55 @@ Ext.define('Stackops.portal.plugin.firewall.view.FirewallGrid', {
     	me.mon(me.rules_store, 'load', me.onLoadRules, me);
     	me.mon(me.policy_store, 'load', me.onLoadPolicy, me);
     	
-    	
-		me.columns = [
+    	me.columns = [
             {   
             	//xtype: 'treecolumn',  
             	//sortable: true,         	
-            	header: Portal.getText('firewall', 'fwaas-grid-head-name'), 
+            	header: Portal.getText('firewall', 'fwaas-grid-head-name'),
             	dataIndex: 'name',    
             }, 
             {
             	header: Portal.getText('firewall', 'fwaas-grid-head-id'),
             	dataIndex: 'id'
             },
-
+            {
+            	header : Portal.getText('firewall', 'fwaas-grid-head-action'),
+            	dataIndex : 'action',
+            	renderer : function(value){
+            		if(value=="allow"){
+            			return  '<img align="left" src="plugin/static/firewall/images/allow-icon.png">'+ value;
+            		}
+            		else{
+            			return  '<img align="left" src="plugin/static/firewall/images/deny-icon.png">' + value;
+            		}
+            	}        	
+            },
             {
             	header: Portal.getText('firewall', 'fwaas-grid-head-enabled'),
-            	dataIndex: 'enabled', 
+            	dataIndex: 'enabled',
             	align : 'center',
             	renderer : function(value){
             		if(value)
-            			return  '<img align="left" src="plugin/static/firewall/images/fw-ok.png">' 
-            	}         	
+            			return  '<img align="middle" src="plugin/static/firewall/images/fw-ok.png">';
+            	}
             },
             {
             	header: Portal.getText('firewall', 'fwaas-grid-head-shared'),
             	dataIndex: 'shared',
+            	align :'center',
             	renderer : me.shared
             },
-            
             {
             	header: Portal.getText('firewall', 'fwaas-grid-head-position'),
             	dataIndex: 'position'
-            },  
+            }, 
             {
             	header: Portal.getText('firewall', 'fwaas-grid-head-protocol'),
             	dataIndex: 'protocol'
             },  
             {
             	header: Portal.getText('firewall', 'fwaas-grid-head-ip_version'),
-            	dataIndex: 'ip_version',
-            	
+            	dataIndex: 'ip_version'
             },  
             {
             	header: Portal.getText('firewall', 'fwaas-grid-head-source_ip_address'),
@@ -103,7 +113,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.FirewallGrid', {
             	header: Portal.getText('firewall', 'fwaas-grid-head-destination_port'),
             	dataIndex: 'destination_port',
             	renderer : me.portValue
-            },  
+            },   
             {
             	header: Portal.getText('firewall', 'fwaas-grid-head-description'),
             	dataIndex: 'description'
@@ -111,10 +121,8 @@ Ext.define('Stackops.portal.plugin.firewall.view.FirewallGrid', {
             {
             	header: Portal.getText('firewall', 'fwaas-grid-head-tenant_id'),
             	dataIndex: 'tenant_id'
-            },          
-            
+            }            
     	];
-    	
     	me.mon(me,'itemcontextmenu',me.onContextMenu, me);
     	me.mon(me, 'itemdblclick', me.dbClick, me);
 	   	me.mon(me,'select',me.onActionMenu, me);
@@ -125,7 +133,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.FirewallGrid', {
     
     dbClick : function(grid, record, item, index, e, eOpts ){
     	var me = this;
-    	me.section.section.detailsCall.call(me.section.section);
+    	me.section.section.details.call(me.section.section);
     },
     
     onLoadFirewall : function(store, records, success){
@@ -142,9 +150,9 @@ Ext.define('Stackops.portal.plugin.firewall.view.FirewallGrid', {
     			firewall_policy_id : record.get('firewall_policy_id'),
     			status : record.get('status'),
     			rules : new Ext.util.MixedCollection()
-    		}
+    		};
     		
-    		me.firewall_collection.add(record.get('id'), firewall)
+    		me.firewall_collection.add(record.get('id'), firewall);
     		
     	});
     	
@@ -199,7 +207,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.FirewallGrid', {
     			destination_port : record.get('destination_por'),
     			firewall_rules : record.get('firewall_rules'),
     			position : record.get('position')
-    		}
+    		};
     		
     		me.rules_collection.add(record.get('id'), rules);
     	});
@@ -231,7 +239,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.FirewallGrid', {
     		
     		
     		me.store.loadData(rule_list);
-    		me.section.section.setLoading(false)
+    		me.section.section.setLoading(false);
     	}
     },
     
@@ -244,7 +252,6 @@ Ext.define('Stackops.portal.plugin.firewall.view.FirewallGrid', {
     	me.section.section.fwCreateR.setVisible(false);
 		me.section.section.fwDeleteR.setVisible(false);
 		me.section.section.fwEditR.setVisible(false);
-		me.section.section.ruleCreateR.setVisible(false);
 		me.section.section.ruleDeleteR.setVisible(false);
 		me.section.section.ruleEditR.setVisible(false);
 		me.section.section.policyCreateR.setVisible(false);
@@ -306,17 +313,12 @@ Ext.define('Stackops.portal.plugin.firewall.view.FirewallGrid', {
     
     shared : function(value){
     	if(value){
-    		return  '<img align="left" src="plugin/static/firewall/images/fw-shared.png">' 
+    		return  '<img align="left" src="plugin/static/firewall/images/fw-shared.png">';
     	}
     },
     
     portValue : function(value){
     	if(value!=null && value !="")
     		return '<img align="left" src="plugin/static/firewall/images/port_16.png">\t' +value;
-    },
-    
-    
-    
-    
-
+    }
 });

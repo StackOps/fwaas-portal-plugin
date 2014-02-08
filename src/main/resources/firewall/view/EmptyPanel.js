@@ -16,19 +16,15 @@ Ext.define('Stackops.portal.plugin.firewall.view.EmptyPanel', {
     	me.mon(me, 'beforeremove', me.onBeforeRemove, me);
     	me.mon(me, 'add', me.onAddC, me);
     	me.callParent(arguments);
-    },
-    
+    },    
     onBeforeRemove : function(container, componente){
     	var me = this;
     	me.setMask(true);
-    },
-    
+    },    
     onAddC: function(container, componente){
     	var me = this;
     	me.setMask(false);
-    },
-    
-    
+    },    
     
     setMask : function(show){
         var me = this;
@@ -41,15 +37,5 @@ Ext.define('Stackops.portal.plugin.firewall.view.EmptyPanel', {
             me.myMask.hide();
         }
         return me.myMask; 
-    },
-    /*autoScroll: false,
-    defaults: {
-      anchor: '100%'
-    },*/
-
-   
-    /*initComponent: function(){
-    	var me = this;
-    	me.callParent(arguments);
-    },*/
+    }
 });

@@ -11,9 +11,12 @@ Ext.define('Stackops.portal.plugin.firewall.view.RulesGrid', {
    	'Ext.toolbar.Toolbar',   		
    	'Ext.data.Store',
     ],
-   
+   	viewConfig: {
+   		loadMask : false,
+		loadingText: undefined
+	},
    //layout: 'fit',
-  layout : {
+  	layout : {
     	type: 'anchor',
     	align: 'stretch'
     },
@@ -42,7 +45,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.RulesGrid', {
             	align : 'center',
             	renderer : function(value){
             		if(value==""||value==undefined||value==null)
-            			return  '<img align="middle" src="plugin/static/firewall/images/fw-ok.png">' 
+            			return  '<img align="middle" src="plugin/static/firewall/images/fw-ok.png">';
             	}
             },
             {
@@ -55,10 +58,10 @@ Ext.define('Stackops.portal.plugin.firewall.view.RulesGrid', {
             	dataIndex : 'action',
             	renderer : function(value){
             		if(value=="allow"){
-            			return  '<img align="left" src="plugin/static/firewall/images/allow-icon.png">'+ value
+            			return  '<img align="left" src="plugin/static/firewall/images/allow-icon.png">'+ value;
             		}
             		else{
-            			return  '<img align="left" src="plugin/static/firewall/images/deny-icon.png">' + value
+            			return  '<img align="left" src="plugin/static/firewall/images/deny-icon.png">' + value;
             		}
             	}        	
             },
@@ -68,7 +71,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.RulesGrid', {
             	align : 'center',
             	renderer : function(value){
             		if(value)
-            			return  '<img align="middle" src="plugin/static/firewall/images/fw-ok.png">' 
+            			return  '<img align="middle" src="plugin/static/firewall/images/fw-ok.png">';
             	}
             },
             {
@@ -126,7 +129,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.RulesGrid', {
     },
     dbClick : function(grid, record, item, index, e, eOpts ){
     	var me = this;
-    	me.section.section.detailsCall.call(me.section.section);
+    	me.section.section.details.call(me.section.section);
     },
     
     onContextMenu : function(grid, record, item, index, event, opts){
@@ -137,7 +140,6 @@ Ext.define('Stackops.portal.plugin.firewall.view.RulesGrid', {
     	me.section.section.fwCreateR.setVisible(false);
 		me.section.section.fwDeleteR.setVisible(false);
 		me.section.section.fwEditR.setVisible(false);
-		me.section.section.ruleCreateR.setVisible(true);
 		me.section.section.ruleDeleteR.setVisible(true);
 		me.section.section.ruleEditR.setVisible(true);
 		me.section.section.policyCreateR.setVisible(false);
@@ -217,7 +219,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.RulesGrid', {
    
     
     
-     ipKind : function(value){
+    ipKind : function(value){
     	var me = this;
     	//return '<div><p style="float: left;"><img src="plugin/static/firewall/images/fw-ip.png" ></p> <p>\t' + value +'</p></div>'
     	if(value!=null && value!="")

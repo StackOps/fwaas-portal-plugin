@@ -22,10 +22,6 @@ Ext.define('Stackops.portal.plugin.firewall.view.UpTree', {
     border : false,
     autoScroll: false,
     title : Portal.getText('firewall', 'uptree-title'),
-    /*defaults: {
-      anchor: '100%'
-    },
-  */
     initComponent: function(){
     	var me = this;
     	me.items =[];
@@ -84,7 +80,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.UpTree', {
             	flex :1,
             	renderer : function(value){
             		if(value)
-            			return  '<img align="middle" src="plugin/static/firewall/images/fw-ok.png">' 
+            			return  '<img align="middle" src="plugin/static/firewall/images/fw-ok.png">';
             	}
             },  
             
@@ -96,7 +92,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.UpTree', {
             	flex :1,
             	renderer : function(value){
             		if(value)
-            			return  '<img align="middle" src="plugin/static/firewall/images/fw-shared.png">'
+            			return  '<img align="middle" src="plugin/static/firewall/images/fw-shared.png">';
             	}
             },
             {   
@@ -107,7 +103,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.UpTree', {
             	flex :1,
             	renderer : function(value){
             		if(value)
-            			return  '<img align="middle" src="plugin/static/firewall/images/fw-ok.png">' 
+            			return  '<img align="middle" src="plugin/static/firewall/images/fw-ok.png">';
             	}
             },
             {   
@@ -124,19 +120,15 @@ Ext.define('Stackops.portal.plugin.firewall.view.UpTree', {
             		else if(value == "DOWN")
             			return '<span style="color:blue;">'+ value +'</span>';
             		else 
-            			return '<span style="color:orange;">'+ value +'</span>'
+            			return '<span style="color:orange;">'+ value +'</span>';
             	}
             }
             
     	];
     	
     	
-    	//me.mon(me.store, 'beforeload', me.rememberSelection, me);
-	   	//me.mon(me.store, 'load', me.refreshSelection, me);
 	   	me.mon(me.store, 'rootchange', me.oRootChange, me);
-    	me.mon(me,'itemcontextmenu',me.onContextMenu, me);    	
-    	//me.mon(me,'select',me.onSelect, me);
-    	//me.mon(me,'beforeselect', me.onSelectc, me);
+    	me.mon(me,'itemcontextmenu',me.onContextMenu, me); 
     	me.mon(me, 'itemdblclick', me.dbClick, me);
     	me.mon(me,'itemexpand',me.onNodeExpand,me);
 		me.mon(me,'itemcollapse',me.onNodeCollapse,me);
@@ -148,7 +140,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.UpTree', {
     dbClick : function(grid, record, item, index, e, eOpts ){
     	var me = this;
     	if(record.get('type') == "firewall"||record.get('type') == "policy")
-    		me.section.detailstCall.call(me.section);
+    		me.section.detailstree.call(me.section);
     },
     
   	onNodeExpand : function(node){
@@ -165,7 +157,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.UpTree', {
     oRootChange : function(store, records, success){
     	var me = this;
     	if(me.created){    		
-    		me.created = false
+    		me.created = false;
     		record = this.getStore().getNodeById(me.created_id);
     	}
     	else if(me.deletedp){
@@ -175,16 +167,14 @@ Ext.define('Stackops.portal.plugin.firewall.view.UpTree', {
     	else if(me.deletedf){
     		me.deletedf = false;
     		record = this.getStore().getNodeById('efirewall');
-    	}
-    		
+    	}    		
     	else{
 			if (0 >= this.selectedRecords.length)
 	        	return;
 	    	
 			else		
 				record = this.getStore().getNodeById(this.selectedRecords[0].get('id'));
-	  	}
-	  	
+	  	}	  	
 	  	this.getSelectionModel().select(record);  
         Ext.defer(this.setScrollTop, 30, this, [this.getView().scrollState.top]);  
     },
@@ -194,14 +184,10 @@ Ext.define('Stackops.portal.plugin.firewall.view.UpTree', {
     
     onSubnetLoad : function(store, records, success){
     	var me = this;
-    	//me.setLoading(true);
-    	me.section.setLoading(true);
-    	
+    	me.section.setLoading(true);    	
     	if(!success){
     		Portal.firewall.neutronProxy = "";
-    	}
-    	
-    	
+    	}   	
     	me.firewall_store.load();
 		me.rules_store.load();
 		me.policy_store.load();
@@ -213,8 +199,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.UpTree', {
     onLoadFirewall : function(store, records, success){
     	var me = this;
     	me.firewallLoaded = true;
-    	me.initGrid();
-    	
+    	me.initGrid();    	
     },
     
     onLoadPolicy : function(store, records, siccess){
@@ -252,7 +237,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.UpTree', {
     		leaf : true, 		
     		id : 'epolicy',
     		children : []
-    	}
+    	};
     	
     	if(me.nodeExpanded.get('epolicy')!=null){
     		
@@ -265,7 +250,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.UpTree', {
     		name : Portal.getText('firewall', 'uptree-rules'),
     		id : 'rules',
     		leaf : true
-    	}
+    	};
     	
     	if(me.nodeExpanded.get('rules')!=null){
     		
@@ -287,7 +272,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.UpTree', {
     			iconCls : 'fwplugin-icon',
     			firewall_rules :  record.get('firewall_rules'),
     			leaf : true    			
-    		}
+    		};
     		firewall_root.children.push(firewall);
     		
     	});
@@ -336,15 +321,6 @@ Ext.define('Stackops.portal.plugin.firewall.view.UpTree', {
     		me.section.setLoading(false);
     	}
     },
-    
-    /*onSelectc : function(){
-	  	var me = this;  	
-	  	me.section.emptyPanel.setMask(true);
-	},*/
-	
-	
-	
-	
 	refresh : function(){
 		var me = this;
 		me.selectedRecords = this.getSelectionModel().getSelection();    	
@@ -368,215 +344,6 @@ Ext.define('Stackops.portal.plugin.firewall.view.UpTree', {
 		me.rules_store.load();
 		me.policy_store.load();
 	},
-	
-	
-    
-    
-    /*onSelect: function(grid, record){    	
-    	var me = this; 
-    	
-    	
-    	me.type = record.get('type');   	
-    	me.section_aux = record.get('id');
-    	
-    	
-    	
-    
-    		
-    		if(me.currentSection != me.section_aux){
-    			me.section.emptyPanel.removeAll();
-    		}
-       		
-	       	if(me.type== "efirewall"){ 	
-	       		
-	       		if(me.currentSection != me.section_aux){
-		       		me.currentPanel = Ext.create('Stackops.portal.plugin.firewall.view.EmptyGrid');
-		       		me.section.emptyPanel.add(me.currentPanel);
-		       		
-		       	
-		       	}
-	       		me.section.containerHtml.update("");
-	       		me.section.section_id = null;
-	       		me.currentSection = me.section_aux;
-	       		
-	       		if(record.get('leaf')==false){me.section.fwCreateB.setVisible(false);}
-		       	else me.section.fwCreateB.setVisible(true);
-		       	
-		       	me.section.fwDeleteB.setVisible(false);
-		       	me.section.fwEditB.setVisible(false);
-		       	me.section.ruleCreateB.setVisible(false);
-				me.section.ruleDeleteB.setVisible(false);
-				me.section.ruleEditB.setVisible(false);
-		       	me.section.policyCreateB.setVisible(false);
-		       	me.section.policyDeleteB.setVisible(false);
-		       	me.section.policyEditB.setVisible(false);			
-				me.section.insertCreateB.setVisible(false);
-				me.section.ruleRemoveB.setVisible(false);				
-				me.section.auditPolicyB.setVisible(false);
-				me.section.enableRuleB.setVisible(false);
-				me.section.disableRuleB.setVisible(false);				
-				me.section.detailsB.setVisible(false); 
-				me.section.detailstB.setVisible(false);
-				
-	       		
-	       				
-	       	}
-	       	else if(me.type== "epolicy"){  
-	       		 
-	       		if(me.currentSection != me.section_aux){
-		       		me.currentPanel = Ext.create('Stackops.portal.plugin.firewall.view.EmptyGrid');       		
-		       		me.section.emptyPanel.add(me.currentPanel); 
-		       	}		
-	       		
-	       		
-	       		me.section.section_id = null;  	
-	       		me.currentSection = me.section_aux;
-	       		me.section.containerHtml.update("");
-	       		
-	       		
-	       		me.section.fwCreateB.setVisible(false);
-	       		me.section.fwDeleteB.setVisible(false);
-		       	me.section.fwEditB.setVisible(false);
-		       	me.section.ruleCreateB.setVisible(false);
-				me.section.ruleDeleteB.setVisible(false);
-				me.section.ruleEditB.setVisible(false);
-		       	me.section.policyCreateB.setVisible(true);
-		       	me.section.policyDeleteB.setVisible(false);
-		       	me.section.policyEditB.setVisible(false);			
-				me.section.insertCreateB.setVisible(false);
-				me.section.ruleRemoveB.setVisible(false);
-				me.section.auditPolicyB.setVisible(false);
-				me.section.enableRuleB.setVisible(false);
-				me.section.disableRuleB.setVisible(false);
-				me.section.detailsB.setVisible(false); 
-				me.section.detailstB.setVisible(false);
-	       	
-	       		
-	       	}
-	       	else if (me.type == "policy"){
-	       		
-	       		me.section.section_id = record.data.id;
-	       		
-	       		
-	       		if(me.currentSection != me.section_aux){
-		       		me.currentPanel = Ext.create('Stackops.portal.plugin.firewall.view.PolicyGrid', {
-		       			layout : 'fit',
-		       			section : me,
-		       			policy_id : record.get('id'),
-		       		});
-		       		
-		       		me.section.emptyPanel.add(me.currentPanel);
-		       	}
-	       		me.currentSection = me.section_aux;
-	       		me.section.containerHtml.update(Portal.getText('firewall','policy-container-html').replace('$1', record.get('shared')).replace('$2', record.get('audited')).replace('$3', record.get('id')));
-	       		
-	       		
-	       		me.section.fwCreateB.setVisible(false);
-	       		me.section.fwDeleteB.setVisible(false);
-		       	me.section.fwEditB.setVisible(false);
-		       	me.section.ruleCreateB.setVisible(false);
-				me.section.ruleDeleteB.setVisible(false);
-				me.section.ruleEditB.setVisible(false);
-		       	me.section.policyCreateB.setVisible(true);
-		       	me.section.policyDeleteB.setVisible(true);
-		       	me.section.policyEditB.setVisible(true);			
-				me.section.insertCreateB.setVisible(false);
-				me.section.ruleRemoveB.setVisible(false);
-				if(!record.get('audited')) me.section.auditPolicyB.setVisible(true);
-				else me.section.auditPolicyB.setVisible(false);
-				me.section.enableRuleB.setVisible(false);
-				me.section.disableRuleB.setVisible(false);
-				me.section.detailsB.setVisible(false); 
-				me.section.detailstB.setVisible(true);
-				
-				
-	       		
-	       	}
-	       	else if (me.type == "firewall"){
-	       		
-	       		if(me.currentSection != me.section_aux){ 			
-	       			
-		       		me.currentPanel = Ext.create('Stackops.portal.plugin.firewall.view.FirewallGrid', {
-		       			layout : 'fit',
-		       			firewall_id : record.get('id'),
-		       			section : me
-		       		});
-	       			me.section.emptyPanel.add(me.currentPanel);
-	       			
-	       		}
-	       		me.currentSection = me.section_aux;
-	       		
-	       		
-	       		me.section.containerHtml.update(Portal.getText('firewall', 'firewall-container-html').replace('$1', record.get('admin_state_up')).
-	       		replace('$2', record.get('firewall_policy_id')).replace('$3', record.get('status')).replace('$4', record.get('id')));
-	       		
-	       		
-				
-				me.section.fwCreateB.setVisible(false);				
-	       		if(record.get('status')=="PENDING_DELETE") 
-	       		{
-	       			me.section.fwDeleteB.setVisible(false);		
-	       			me.section.fwEditB.setVisible(false);
-	       		}		
-				else 
-				{
-					me.section.fwDeleteB.setVisible(true);
-					me.section.fwEditB.setVisible(true);
-				}
-		       	
-		       	me.section.ruleCreateB.setVisible(false);
-				me.section.ruleDeleteB.setVisible(false);
-				me.section.ruleEditB.setVisible(false);
-		       	me.section.policyCreateB.setVisible(false);
-		       	me.section.policyDeleteB.setVisible(false);
-		       	me.section.policyEditB.setVisible(false);			
-				me.section.insertCreateB.setVisible(false);
-				me.section.ruleRemoveB.setVisible(false);
-				me.section.auditPolicyB.setVisible(false);
-				me.section.enableRuleB.setVisible(false);
-				me.section.disableRuleB.setVisible(false);
-				me.section.detailsB.setVisible(false); 
-				me.section.detailstB.setVisible(true);
-	       		
-	       	}
-	       	else if (me.type == "rules"){
-	       		
-	       		if(me.currentSection != me.section_aux){
-		       		me.currentPanel = Ext.create('Stackops.portal.plugin.firewall.view.RulesGrid',{
-		       			layout : 'fit',
-		       			section : me
-		       		});
-		       		
-		       		me.section.emptyPanel.add(me.currentPanel);
-		       	}
-	       		me.currentSection = me.section_aux;
-	       		me.section.containerHtml.update("");
-	       		
-	       		
-	       		me.section.fwCreateB.setVisible(false);
-	       		me.section.fwDeleteB.setVisible(false);
-		       	me.section.fwEditB.setVisible(false);
-		       	me.section.ruleCreateB.setVisible(true);
-				me.section.ruleDeleteB.setVisible(false);
-				me.section.ruleEditB.setVisible(false);
-		       	me.section.policyCreateB.setVisible(false);
-		       	me.section.policyDeleteB.setVisible(false);
-		       	me.section.policyEditB.setVisible(false);			
-				me.section.insertCreateB.setVisible(false);
-				me.section.ruleRemoveB.setVisible(false);
-				me.section.auditPolicyB.setVisible(false);
-				me.section.enableRuleB.setVisible(false);
-				me.section.disableRuleB.setVisible(false);
-				me.section.detailsB.setVisible(false); 
-				me.section.detailstB.setVisible(false);
-				
-	       		
-	       	}    
-	       	
-	       me.section.emptyPanel.setMask(false);  
-	    
-    },*/
-    
     onContextMenu: function(grid, record, item, index, event, opts){
     	var me = this;
     	me.type = record.get('type');
@@ -585,7 +352,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.UpTree', {
     	if(me.type== "firewall"){       		
     		
     		
-			/*me.section.fwCreateB.setVisible(false);
+			me.section.fwCreateB.setVisible(false);
 			if (record.get('status') == "PENDING_DELETE"){
 				me.section.fwDeleteR.setVisible(false);
 				me.section.fwEditR.setVisible(false);
@@ -594,18 +361,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.UpTree', {
 			else{
 				me.section.fwDeleteR.setVisible(true);
 				me.section.fwEditR.setVisible(true);
-			}*/
-			
-			
-			
-			me.section.fwDeleteR.setVisible(true);
-			me.section.fwEditR.setVisible(true);
-			me.section.fwCreateB.setVisible(true);
-			
-			
-			
-			
-			me.section.ruleCreateR.setVisible(false);
+			}
 			me.section.ruleDeleteR.setVisible(false);
 			me.section.ruleEditR.setVisible(false);
 			me.section.policyCreateR.setVisible(false);
@@ -627,7 +383,6 @@ Ext.define('Stackops.portal.plugin.firewall.view.UpTree', {
 			me.section.fwCreateR.setVisible(false);
 			me.section.fwDeleteR.setVisible(false);
 			me.section.fwEditR.setVisible(false);
-			me.section.ruleCreateR.setVisible(false);
 			me.section.ruleDeleteR.setVisible(false);
 			me.section.ruleEditR.setVisible(false);
 			me.section.policyCreateR.setVisible(true);
@@ -650,7 +405,6 @@ Ext.define('Stackops.portal.plugin.firewall.view.UpTree', {
 			me.section.fwCreateR.setVisible(false);
 			me.section.fwDeleteR.setVisible(false);
 			me.section.fwEditR.setVisible(false);
-			me.section.ruleCreateR.setVisible(false);
 			me.section.ruleDeleteR.setVisible(false);
 			me.section.ruleEditR.setVisible(false);
 			me.section.policyCreateR.setVisible(true);
@@ -667,15 +421,13 @@ Ext.define('Stackops.portal.plugin.firewall.view.UpTree', {
 
        	}
        	else if (me.type == "efirewall"){
-       		me.section.fwCreateR.setVisible(true)
-			/*if (record.get('leaf') == false) {
+			if (record.get('leaf') == false) {
 				me.section.fwCreateR.setVisible(false);
 			} else
-				me.section.fwCreateR.setVisible(true);*/
+				me.section.fwCreateR.setVisible(true);
 
 			me.section.fwDeleteR.setVisible(false);
 			me.section.fwEditR.setVisible(false);
-			me.section.ruleCreateR.setVisible(false);
 			me.section.ruleDeleteR.setVisible(false);
 			me.section.ruleEditR.setVisible(false);
 			me.section.policyCreateR.setVisible(false);
@@ -689,15 +441,11 @@ Ext.define('Stackops.portal.plugin.firewall.view.UpTree', {
 			me.section.detailsR.setVisible(false); 
 			me.section.detailspR.setVisible(false);
 			me.section.detailsfR.setVisible(false);
-
-
        	}
-       	else{
-       		
+       	else{       		
 			me.section.fwCreateR.setVisible(false);
 			me.section.fwDeleteR.setVisible(false);
 			me.section.fwEditR.setVisible(false);
-			me.section.ruleCreateR.setVisible(true);
 			me.section.ruleDeleteR.setVisible(false);
 			me.section.ruleEditR.setVisible(false);
 			me.section.policyCreateR.setVisible(false);
@@ -711,18 +459,10 @@ Ext.define('Stackops.portal.plugin.firewall.view.UpTree', {
 			me.section.detailsR.setVisible(false); 
 			me.section.detailspR.setVisible(false);
 			me.section.detailsfR.setVisible(false);
-
-
-       	}
-    	
+       	}    	
     	if(!(record.get('type') == 'efirewall' && record.get('leaf') == false)){
     		me.section.rightMenu.showAt(event.xy);
     	}
     	
     }
-    
-    
-    
-    
-
 });
