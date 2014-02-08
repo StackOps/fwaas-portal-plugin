@@ -51,7 +51,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.RuleCreate', {
             	{ "id": "tcp", "name" : "TCP" },
             	{ "id": "udp", "name" : "UDP" },
             	{ "id": "icmp", "name" : "ICMP" },
-            	{ "id": "any", "name" : "ANY" }
+            	{ "id": "None", "name" : "NONE" }
            	]
        });
        
@@ -62,6 +62,10 @@ Ext.define('Stackops.portal.plugin.firewall.view.RuleCreate', {
             	{ "id": "deny", "name" : "DENY" }
            	]
        });
+       
+       
+       
+       
    		
 	    me.items= [
 	    {
@@ -126,7 +130,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.RuleCreate', {
     			fieldLabel : Portal.getText('firewall', 'rule-create-s_address'),  
 	   			name:'s_address',
 	   			vtype: 'cidr'
-    	}
+    	};
    		
    		me.items.push(me.s_ip);  
    		
@@ -184,6 +188,26 @@ Ext.define('Stackops.portal.plugin.firewall.view.RuleCreate', {
    		me.items.push(me.d_port);
    		
    		
+   		me.tenantsStore =  Ext.create('Ext.data.Store', {
+        	fields: ['id', 'name'],
+            data : me.section.tenantsData
+       });
+       
+   		me.tenants_combo = {
+    			xtype : 'combo',
+    			fieldLabel : 'Tenant',
+    			displayField: 'name',
+	            valueField: 'id',      
+    			queryMode: 'local', 
+	   			typeAhead : true,
+	   			name:'tenant_id',  
+	   			store : me.tenantsStore
+    	};
+    	
+    	if(me.section.admin){
+   			me.items.push(me.tenants_combo);
+   		}
+   		
    		me.description = Ext.create('Ext.form.field.TextArea',{
    			
    			grow : true,
@@ -224,7 +248,11 @@ Ext.define('Stackops.portal.plugin.firewall.view.RuleCreate', {
             name : 'enabled',
             scope: me  
     	});	
-    	me.items.push(me.enabledBox);    	
+    	me.items.push(me.enabledBox);   
+    	
+    	
+    	
+    	 	
       	me.callParent(arguments);
     
     },
@@ -256,6 +284,13 @@ Ext.define('Stackops.portal.plugin.firewall.view.RuleCreate', {
 	            	shared : form.findField('shared').getValue()
 	            }
             }; 
+            if(form.findField('tenant_id')!=null && form.findField('tenant_id') != undefined && form.findField('tenant_id')!= "" &&
+            form.findField('tenant_id').getValue()!="" && form.findField('tenant_id').getValue()!=null&& form.findField('tenant_id').getValue()!=undefined){
+            	this.json.firewall_rule.tenant_id = form.findField('tenant_id').getValue();
+            }
+            else{
+            	delete this.json.firewall_rule.tenant_id;
+            }
             
             if(form.findField('s_address').getValue()!="" && form.findField('s_address').getValue()!=null){
             	this.json.firewall_rule.source_ip_address = form.findField('s_address').getValue();
@@ -295,7 +330,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.RuleCreate', {
 									resp = resp.NeutronError.message;
 								}
 								else if(resp!=null && resp.NeutronError!=null ){
-	                        		resp = resp.NeutronError
+	                        		resp = resp.NeutronError;
 	                        	}
 								else{
 									resp = Portal.getText('firewall', 'rule-create-error');

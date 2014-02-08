@@ -61,7 +61,30 @@ Ext.define('Stackops.portal.plugin.firewall.view.FirewallEdit', {
 	        	
     	];
     	
-    	me.items.push(me.policyCombo)
+    	me.items.push(me.policyCombo);
+    	
+    	/*me.tenantsStore =  Ext.create('Ext.data.Store', {
+        	fields: ['id', 'name'],
+            data : me.section.tenantsData
+       });
+       
+   		me.tenants_combo = {
+    			xtype : 'combo',
+    			fieldLabel : 'Tenant',
+    			displayField: 'name',
+	            valueField: 'id',      
+    			queryMode: 'local', 
+	   			typeAhead : true,
+	   			name:'tenant_id',  
+	   			labelWidth : 120,
+   				margin : '5 5 5 5',
+	   			value : me.section.tenantId,
+	   			store : me.tenantsStore
+    	};
+    	
+    	if(me.section.admin){
+   			me.items.push(me.tenants_combo);
+   		}*/
 
    		
    		me.description = Ext.create('Ext.form.field.TextArea',{
@@ -117,7 +140,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.FirewallEdit', {
             this.up('form').up('window').close();
         }
     }, {
-    	text : Portal.getText('firewall', 'create'),       
+    	text : Portal.getText('firewall', 'submit'),       
         formBind: true,
         handler: function() {
             var form = this.up('form').getForm();
@@ -134,6 +157,13 @@ Ext.define('Stackops.portal.plugin.firewall.view.FirewallEdit', {
             	this.json.firewall.description = me.description.getValue();
             }
             
+            /*if(form.findField('tenant_id')!=null && form.findField('tenant_id') != undefined && form.findField('tenant_id')!= "" &&
+            form.findField('tenant_id').getValue()!="" && form.findField('tenant_id').getValue()!=null&& form.findField('tenant_id').getValue()!=undefined){
+            	this.json.firewall.tenant_id = form.findField('tenant_id').getValue();
+            }
+            else{
+            	delete this.json.firewall.tenant_id;
+            }*/
             
 
             

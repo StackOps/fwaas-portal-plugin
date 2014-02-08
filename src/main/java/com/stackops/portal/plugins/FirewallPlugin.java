@@ -85,6 +85,7 @@ public class FirewallPlugin implements PortalPlugin {
     public List<String> getRequiredRoles() {
         ArrayList<String> roles = new ArrayList<String>();
         roles.add(PortalPlugin.ROLE_ADMIN);
+	roles.add(PortalPlugin.ROLE_USER);
         roles.add(MY_PLUGIN_ROLE);
         return roles;
     }

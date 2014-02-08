@@ -58,7 +58,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.PolicyGrid', {
             	align : 'center',
             	renderer : function(value){
             		if(value)
-            			return  '<img align="left" src="plugin/static/firewall/images/fw-ok.png">' 
+            			return  '<img align="left" src="plugin/static/firewall/images/fw-ok.png">';
             	}
             },
             {
@@ -168,7 +168,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.PolicyGrid', {
     			destination_port : record.get('destination_por'),
     			firewall_rules : record.get('firewall_rules'),
     			position : record.get('position')
-    		}
+    		};
     		
     		me.rules_collection.add(record.get('id'), rules);
     	});
@@ -229,7 +229,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.PolicyGrid', {
 		me.section.section.detailsfR.setVisible(false);
 		if(record.get('enabled'))	{
 			me.section.section.disableRuleR.setVisible(true);
-			me.section.section.enableRuleR.setVisible(false)
+			me.section.section.enableRuleR.setVisible(false);
 		}
 		else{
 			 me.section.section.enableRuleR.setVisible(true);
@@ -264,7 +264,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.PolicyGrid', {
 			me.section.section.detailsB.setVisible(true);
 			if(record.get('enabled'))	{
 				me.section.section.disableRuleB.setVisible(true);
-				me.section.section.enableRuleB.setVisible(false)
+				me.section.section.enableRuleB.setVisible(false);
 			}
 			else{
 				 me.section.section.enableRuleB.setVisible(true);
@@ -289,7 +289,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.PolicyGrid', {
     
     shared : function(value){
     	if(value){
-    		return  '<img align="left" src="plugin/static/firewall/images/fw-shared.png">' 
+    		return  '<img align="left" src="plugin/static/firewall/images/fw-shared.png">' ;
     	}
     },
     

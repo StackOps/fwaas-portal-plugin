@@ -585,7 +585,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.UpTree', {
     	if(me.type== "firewall"){       		
     		
     		
-			me.section.fwCreateB.setVisible(false);
+			/*me.section.fwCreateB.setVisible(false);
 			if (record.get('status') == "PENDING_DELETE"){
 				me.section.fwDeleteR.setVisible(false);
 				me.section.fwEditR.setVisible(false);
@@ -594,7 +594,16 @@ Ext.define('Stackops.portal.plugin.firewall.view.UpTree', {
 			else{
 				me.section.fwDeleteR.setVisible(true);
 				me.section.fwEditR.setVisible(true);
-			}
+			}*/
+			
+			
+			
+			me.section.fwDeleteR.setVisible(true);
+			me.section.fwEditR.setVisible(true);
+			me.section.fwCreateB.setVisible(true);
+			
+			
+			
 			
 			me.section.ruleCreateR.setVisible(false);
 			me.section.ruleDeleteR.setVisible(false);
@@ -632,7 +641,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.UpTree', {
 			me.section.detailspR.setVisible(true);
 			me.section.detailsfR.setVisible(false);
 			
-			if(!record.get('audited')) me.section.auditPolicyR.setVisible(true);
+			if(!record.get('audited') && me.section.admin) me.section.auditPolicyR.setVisible(true);
 			else me.section.auditPolicyR.setVisible(false);
 
        	}
@@ -658,11 +667,11 @@ Ext.define('Stackops.portal.plugin.firewall.view.UpTree', {
 
        	}
        	else if (me.type == "efirewall"){
-       		
-			if (record.get('leaf') == false) {
+       		me.section.fwCreateR.setVisible(true)
+			/*if (record.get('leaf') == false) {
 				me.section.fwCreateR.setVisible(false);
 			} else
-				me.section.fwCreateR.setVisible(true);
+				me.section.fwCreateR.setVisible(true);*/
 
 			me.section.fwDeleteR.setVisible(false);
 			me.section.fwEditR.setVisible(false);

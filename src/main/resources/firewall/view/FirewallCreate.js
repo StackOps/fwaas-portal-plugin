@@ -75,6 +75,28 @@ Ext.define('Stackops.portal.plugin.firewall.view.FirewallCreate', {
     	];
     	
     	//me.items.push(me.policyCombo)
+    	
+    	me.tenantsStore =  Ext.create('Ext.data.Store', {
+        	fields: ['id', 'name'],
+            data : me.section.tenantsData
+       	});
+   		
+   		me.tenants_combo = {
+    			xtype : 'combo',
+    			fieldLabel : 'Tenant',
+    			displayField: 'name',
+	            valueField: 'id',      
+    			queryMode: 'local', 
+    			labelWidth : 120,
+   				margin : '5 5 5 5',
+	   			typeAhead : true,
+	   			name:'tenant_id',  
+	   			store : me.tenantsStore
+    	};
+    	
+    	if(me.section.admin){
+   			me.items.push(me.tenants_combo);
+   		}
 
    		
    		me.description = Ext.create('Ext.form.field.TextArea',{
@@ -145,6 +167,14 @@ Ext.define('Stackops.portal.plugin.firewall.view.FirewallCreate', {
             	this.json.firewall.description = me.description.getValue();
             }
             
+            
+            if(form.findField('tenant_id')!=null && form.findField('tenant_id') != undefined && form.findField('tenant_id')!= "" &&
+            form.findField('tenant_id').getValue()!="" && form.findField('tenant_id').getValue()!=null&& form.findField('tenant_id').getValue()!=undefined){
+            	this.json.firewall.tenant_id = form.findField('tenant_id').getValue();
+            }
+            else{
+            	delete this.json.firewall.tenant_id;
+            }
             
 
             

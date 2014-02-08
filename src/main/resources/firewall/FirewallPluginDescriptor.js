@@ -19,23 +19,18 @@ Ext.define('Stackops.portal.plugin.firewall.FirewallPluginDescriptor', {
           Ext.override(Ext.LoadMask, { 
             toFront: function(preventFocus) {
                 var me = this;
-                /*if (me.zIndexParent) {
-                    me.zIndexParent.toFront(true);
-                }*/
                 if (me.zIndexManager.bringToFront(me)) {
                     if (!Ext.isDefined(preventFocus)) {
                         preventFocus = !me.focusOnToFront;
                     }
                     if (!preventFocus) {
-                        // Kick off a delayed focus request.
-                        // If another floating Component is toFronted before the delay expires
-                        // this will not receive focus.
                         me.focus(false, true);
                     }
                 }
                 return me;
             }
         });
+        
         if (Portal.intercept_help != true) {
 			Portal.intercept_help = true;
 			Ext.Function.interceptBefore(Ext.form.Field.prototype, 'initComponent', function() {
@@ -43,13 +38,9 @@ Ext.define('Stackops.portal.plugin.firewall.FirewallPluginDescriptor', {
 				var f = this.fieldLabel, fl = this.labelSeparator, h = this.fwaashelpText, i =this.fwaasInfo, oo = this.fwaasmandatory;
 				
 				if (h && h !== '' && fl) {
-					//this.labelSeparator = fl+'<span style="font-weight:bold; color:red;" data-qtip="'+h+'">'+" *"+'</span> ';
-					
-					
-					//this.labelSeparator =fl + '<span style="font-weight:bold; color:#5882FA; font-size: 15px;" data-qtip="' + h + '">' + " *" + '</span> ';
-					
-					this.fieldLabel = '<span data-qtip="' + h + '">' + f +'</span>';
-					
+					//this.labelSeparator = fl+'<span style="font-weight:bold; color:red;" data-qtip="'+h+'">'+" *"+'</span> ';					
+					//this.labelSeparator =fl + '<span style="font-weight:bold; color:#5882FA; font-size: 15px;" data-qtip="' + h + '">' + " *" + '</span> ';					
+					this.fieldLabel = '<span data-qtip="' + h + '">' + f +'</span>';					
 					//this.labelSeparator = fl+'<img align="middle" src="../portal/plugin/static/fwaas/images/info-icon.png" data-qtip="'+h+'"</img>';
 					//this.labelSeparator = fl + '<span style="font-weight:bold; color:#5882FA; font-size: 15px;" data-qtip=">' + " *" + '</span> ';
 				}

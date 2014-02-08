@@ -148,10 +148,10 @@ Ext.define('Stackops.portal.plugin.firewall.view.RulesGrid', {
 		me.section.section.auditPolicyR.setVisible(false);
 		me.section.section.detailsR.setVisible(true);
 		me.section.section.detailspR.setVisible(false);
-		me.section.section.detailsfR.setVisible(true);
+		me.section.section.detailsfR.setVisible(false);
 		if(record.get('enabled'))	{
 			me.section.section.disableRuleR.setVisible(true);
-			me.section.section.enableRuleR.setVisible(false)
+			me.section.section.enableRuleR.setVisible(false);
 		}
 		else{
 			 me.section.section.enableRuleR.setVisible(true);
@@ -183,7 +183,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.RulesGrid', {
 			me.section.section.ruleDeleteB.setVisible(true);
 			if(record.get('enabled'))	{
 				me.section.section.disableRuleB.setVisible(true);
-				me.section.section.enableRuleB.setVisible(false)
+				me.section.section.enableRuleB.setVisible(false);
 			}
 			else{
 				 me.section.section.enableRuleB.setVisible(true);
@@ -226,7 +226,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.RulesGrid', {
     
     shared : function(value){
     	if(value){
-    		return  '<img align="middle" src="plugin/static/firewall/images/fw-shared.png">' 
+    		return  '<img align="middle" src="plugin/static/firewall/images/fw-shared.png">';
     	}
     },
     

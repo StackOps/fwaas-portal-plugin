@@ -38,17 +38,18 @@ Ext.define('Stackops.portal.plugin.firewall.view.RuleInsert', {
 		});
 		
 		me.mixedC = new Ext.util.MixedCollection();
-		Ext.each(me.policyRecord.raw.firewall_rules, function(record){
+		
+		/*Ext.each(me.policyRecord.raw.firewall_rules, function(record){
 			values = {
 				id : record
-			}
-			me.mixedC.add(record, values)
-		})
+			};
+			me.mixedC.add(record, values);
+		});*/
 		
 	
 		me.rules_store_aux = Ext.create('Ext.data.Store', {
 		    model: 'Stackops.portal.plugin.firewall.model.Firewall_Rule',
-		    data: me.mixedC.getRange()
+		    data: me.rule_of_policy//me.mixedC.getRange()
 		});
 		
 
@@ -57,16 +58,26 @@ Ext.define('Stackops.portal.plugin.firewall.view.RuleInsert', {
     	me.rules_combo = Ext.create('Ext.form.field.ComboBox',
    		{
    			fieldLabel: Portal.getText('firewall', 'fwaas-insert-rule'),
-   			displayField: 'id',
+   			displayField: 'name',
             valueField: 'id',          
             forceSelection : true,
             allowBlank : false,
             margin : '10 5 10 5',   			
    			queryMode: 'local', 
    			labelWidth : 120,
+   			store : me.rules_store,
    			typeAhead : true,
    			name:'firewall_rule_id',  
-   			store : me.rules_store
+   			tpl: Ext.create('Ext.XTemplate',
+		        '<tpl for=".">',			       
+			        	'<div class="x-boundlist-item">{id} - {name}</div>',				        
+		        '</tpl>'		       
+		    ),
+    		displayTpl: Ext.create('Ext.XTemplate',
+		        '<tpl for=".">',			        
+			        	'{name}',
+		        '</tpl>'		        
+		  )
    		});
    		me.items.push(me.rules_combo);
    		
@@ -75,7 +86,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.RuleInsert', {
    		me.rules_combo_aux = Ext.create('Ext.form.field.ComboBox',
    		{
    			fieldLabel: Portal.getText('firewall', 'fwaas-insert-rule-before'),
-   			displayField: 'id',
+   			displayField: 'name',
             valueField: 'id',          
             //forceSelection : true,
             margin : '10 5 10 5',   			
@@ -93,7 +104,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.RuleInsert', {
    		me.rules_combo_after = Ext.create('Ext.form.field.ComboBox',
    		{
    			fieldLabel: Portal.getText('firewall', 'fwaas-insert-rule-after'),
-   			displayField: 'id',
+   			displayField: 'name',
             valueField: 'id',         
             //forceSelection : true,
             margin : '10 5 20 5',   			

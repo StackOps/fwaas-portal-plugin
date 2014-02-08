@@ -63,8 +63,30 @@ Ext.define('Stackops.portal.plugin.firewall.view.PolicyCreate', {
 	    },
 	        	
     	];
-    	me.items.push(me.multiCombo)
+    	me.items.push(me.multiCombo);
     	
+    	
+    	me.tenantsStore =  Ext.create('Ext.data.Store', {
+        	fields: ['id', 'name'],
+            data : me.section.tenantsData
+       	});
+   		
+   		me.tenants_combo = {
+    			xtype : 'combo',
+    			margin : '5 5 5 5',  
+    			fieldLabel : 'Tenant',
+    			displayField: 'name',
+	            valueField: 'id',      
+    			queryMode: 'local', 
+	   			typeAhead : true,
+	   			labelWidth : 150,
+	   			name:'tenant_id',  
+	   			store : me.tenantsStore
+    	};
+    	
+    	if(me.section.admin){
+   			me.items.push(me.tenants_combo);
+   		}
    		
    		me.description = Ext.create('Ext.form.field.TextArea',{
    			
@@ -75,6 +97,9 @@ Ext.define('Stackops.portal.plugin.firewall.view.PolicyCreate', {
    			name: 'description', 
    		});
    		me.items.push(me.description);
+   		
+   		
+   		
    		
    		
    		
@@ -100,7 +125,11 @@ Ext.define('Stackops.portal.plugin.firewall.view.PolicyCreate', {
             name : 'audited',
             scope: me  
     	});	
-    	me.items.push(me.auditedBox);    	
+    	
+    	if(me.section.admin){
+   			me.items.push(me.auditedBox);  
+   		}
+    	  	
       	me.callParent(arguments);
     
     },
@@ -127,6 +156,15 @@ Ext.define('Stackops.portal.plugin.firewall.view.PolicyCreate', {
 	            	firewall_rules : []
 	            }
             }; 
+            
+            if(form.findField('tenant_id')!=null && form.findField('tenant_id') != undefined && form.findField('tenant_id')!= "" &&
+            form.findField('tenant_id').getValue()!="" && form.findField('tenant_id').getValue()!=null&& form.findField('tenant_id').getValue()!=undefined){
+            	this.json.firewall_policy.tenant_id = form.findField('tenant_id').getValue();
+            }
+            else{
+            	delete this.json.firewall_policy.tenant_id;
+            }
+            
            	if(me.description.getValue()!="" && me.description.getValue() != null){
             	this.json.firewall_policy.description = me.description.getValue();
             }

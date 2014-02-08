@@ -30,8 +30,23 @@ Ext.define('Stackops.portal.plugin.firewall.view.FwaasPluginPanel', {
     initComponent: function(){
     	var me = this;
     	me.items = [];    
-    	Portal.firewall.neutronProxy = "v2.0/";
+    	Portal.firewall.neutronProxy = "v2.0/"; // this is used to check the version of the neutron service
+    	me.tenantId = Portal.getCurrentUser().currentTenant.keystoneId; // the current tenant
+    	me.admin = false;
+    	Ext.each(Portal.getCurrentUser().permissions, function(record){    		
+    		if(record.role.name == 'admin'){
+    			me.admin = true;
+    		}    		
+    	});
     	
+       me.tenantList = Portal.getCurrentUser().tenantsMap;
+       me.tenantsData = [];
+       Ext.Object.each(me.tenantList, function(key, value){
+       		me.tenantsData.push({
+       			id : key,
+       			name : value
+       		});
+       });
     	
     	/*** HERE WE DEFINE THE TWO PANEL THAT WILL DIVIDE THE MAIN PANEL **/
     	me.treePanel = Ext.create('Stackops.portal.plugin.firewall.view.UpTree', {
@@ -57,43 +72,31 @@ Ext.define('Stackops.portal.plugin.firewall.view.FwaasPluginPanel', {
 		me.createPolicyConfig = {
 			text : Portal.getText('firewall', 'fwaas-create-policy'),
 			iconCls : 'policy-create-icon',
-			style : {
-				border : false
-			},
-			frame : false,
 			handler : function(){
 				me.createPcall(me);
 			},
 			hidden : true,
 			scope : me	
-		},
+		};
 		me.createFirewallConfig = {
 			text : Portal.getText('firewall', 'fwaas-create-firewall'),
 			iconCls : 'fwaas-create-icon',
-			style : {
-				border : false
-			},
 			hidden : true,
-			frame : false,
 			handler : function(){
 				me.createFWcall(me);
 			},
 			scope : me	
-		},
+		};
 		
 		me.createRuleConfig = {
 			text : Portal.getText('firewall', 'fwaas-create-rule'),
 			iconCls : 'rule-create-icon',
-			style : {
-				border : false
-			},
 			hidden : true,
-			frame : false,
 			handler : function(){
 				me.createRcall(me);
 			},
 			scope : me	
-		},
+		};
 		
 		me.insertRuleConfig = {
 			text : Portal.getText('firewall', 'fwaas-insert-rule'),
@@ -107,7 +110,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.FwaasPluginPanel', {
 				me.insertRcall(me);
 			},
 			scope : me	
-		},
+		};
 		
 		me.deletePolicyConfig = {
 			text : Portal.getText('firewall', 'fwaas-delete-policy'),
@@ -121,7 +124,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.FwaasPluginPanel', {
 				me.deletePcall(me);
 			},
 			scope : me	
-		},
+		};
 		me.deleteFirewallConfig = {
 			text : Portal.getText('firewall', 'fwaas-delete-firewall'),
 			iconCls : 'fwaas-delete-icon',
@@ -134,7 +137,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.FwaasPluginPanel', {
 				me.deleteFWcall(me);
 			},
 			scope : me	
-		},
+		};
 		
 		me.deleteRuleConfig = {
 			text : Portal.getText('firewall', 'fwaas-delete-rule'),
@@ -148,7 +151,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.FwaasPluginPanel', {
 				me.deleteRcall(me);
 			},
 			scope : me	
-		},
+		};
 		
 		me.deleteRuleRemoveConfig = {
 			text : Portal.getText('firewall', 'fwaas-remove-rule'),
@@ -162,7 +165,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.FwaasPluginPanel', {
 				me.removeRcall(me);
 			},
 			scope : me	
-		},
+		};
 		
 		
 		me.editPolicyConfig = {
@@ -177,7 +180,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.FwaasPluginPanel', {
 				me.editPcall(me);
 			},
 			scope : me	
-		},
+		};
 		
 		
 		me.auditPolicyConfig = {
@@ -192,7 +195,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.FwaasPluginPanel', {
 				me.auditPcall(me);
 			},
 			scope : me
-		}
+		};
 		
 		me.enableRuleConfig ={
 			text : Portal.getText('firewall', 'fwaas-enable-rule'),
@@ -206,7 +209,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.FwaasPluginPanel', {
 				me.enableRcall(me);
 			},
 			scope : me
-		}
+		};
 		
 		me.disableRuleConfig = {
 			text : Portal.getText('firewall', 'fwaas-disable-rule'),
@@ -220,7 +223,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.FwaasPluginPanel', {
 				me.disableRcall(me);
 			},
 			scope : me
-		}
+		};
 		
 		me.editFirewallConfig = {
 			text : Portal.getText('firewall', 'fwaas-edit-firewall'),
@@ -355,10 +358,10 @@ Ext.define('Stackops.portal.plugin.firewall.view.FwaasPluginPanel', {
     	};
     	
     	me.refreshIcon = Ext.create('Ext.button.Button',me.newSGRefreshConfig);
-    	me.menuButtons = [me.fwCreateB, me.policyCreateB, me.ruleCreateB, me.fwDeleteB, 
+    	me.menuButtons = [me.fwCreateB, me.policyCreateB, me.ruleCreateB, me.fwDeleteB,
     	me.fwEditB, me.policyDeleteB, me.policyEditB, me.ruleDeleteB,me.insertCreateB,
     	me.ruleRemoveB, me.ruleEditB,me.auditPolicyB, me.enableRuleB, me.disableRuleB,
-    	me.detailsB, me.detailspB, me.detailsfB, '->', me.refreshIcon]
+    	me.detailsB, me.detailspB, me.detailsfB, '->', me.refreshIcon];
     	
     	
     	 me.dockedItems = [{
@@ -593,8 +596,8 @@ Ext.define('Stackops.portal.plugin.firewall.view.FwaasPluginPanel', {
 			width : 460,
 			cls : 'fwaas-container-white-icon',
 			minWidth : 460,
-			height : 300,
-			minHeight : 300,
+			height : 320,
+			minHeight : 320,
 			autoScroll : true,
 			style : {
 				border : 0
@@ -625,7 +628,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.FwaasPluginPanel', {
 
 		me.createWinRule = Ext.create('Ext.window.Window', {
 			title : Portal.getText('firewall', 'fwaas-create-rule'),
-			height : 450,
+			height : me.admin ? 480 : 450,
 			width : 750,
 			resizable : false,
             closable : true,
@@ -744,7 +747,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.FwaasPluginPanel', {
 										resp = resp.NeutronError.message;
 									} 
 									else if(resp!=null && resp.NeutronError!=null ){
-	                        				resp = resp.NeutronError
+	                        				resp = resp.NeutronError;
 	                        		}
 									else {
 										resp = Portal.getText('firewall', 'rule-edit-error');
@@ -808,7 +811,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.FwaasPluginPanel', {
 										resp = resp.NeutronError.message;
 									} 
 									else if(resp!=null && resp.NeutronError!=null ){
-	                        				resp = resp.NeutronError
+	                        				resp = resp.NeutronError;
 	                        		}
 									else {
 										resp = Portal.getText('firewall', 'rule-edit-error');
@@ -856,17 +859,22 @@ Ext.define('Stackops.portal.plugin.firewall.view.FwaasPluginPanel', {
 				if (success) {
 					var resp = Ext.decode(response.responseText, true);
 					var rule_store = [];
+					var rule_of_policy = [];
 					rules = resp.firewall_rules;
 					Ext.Array.each(rules, function(rule){
 						if(rule.firewall_policy_id == null){
 							rule_store.push(rule);
+						}
+						else if (rule.firewall_policy_id == record.get('id')){
+							rule_of_policy.push(rule);
 						}
 					});
 					
 					me.insertForm = Ext.create('Stackops.portal.plugin.firewall.view.RuleInsert',{
 						section : me,
 						policyRecord : record,
-						rule_store : rule_store
+						rule_store : rule_store,
+						rule_of_policy : rule_of_policy
 				    });
 					
 					me.form_section = Ext.create('Ext.container.Container', {
@@ -900,7 +908,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.FwaasPluginPanel', {
 					}); 			
 					
 					me.insertWinRule = Ext.create('Ext.window.Window', {
-						title : Portal.getText('firewall', 'fwaas-create-firewall'),
+						title : Portal.getText('firewall', 'fwaas-insert-rule'),
 						height : 230,
 						width : 650,
 						resizable : false,
@@ -952,7 +960,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.FwaasPluginPanel', {
 	            			callback : function(options,success,response){
 	            				if(success){	            					
 	            					//me.startRefresh();
-	            					me.refresh()
+	            					me.refresh();
 	            				}else{
 	            					if(response.responseText!=null){
 	                        			resp = Ext.decode(response.responseText, true);	                        			
@@ -960,7 +968,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.FwaasPluginPanel', {
 	                        				resp = resp.NeutronError.message;
 	                        			}
 	                        			else if(resp!=null && resp.NeutronError!=null ){
-	                        				resp = resp.NeutronError
+	                        				resp = resp.NeutronError;
 	                        			}
 	                        			else{
 	                        				resp = Portal.getText('firewall', 'rule-delete-error');
@@ -1014,7 +1022,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.FwaasPluginPanel', {
 	                        			if(resp!=null && resp.NeutronError!=null && resp.NeutronError.message!=null)                     			
 	                        				resp = resp.NeutronError.message;
 	                        			else if(resp!=null && resp.NeutronError!=null ){
-	                        				resp = resp.NeutronError
+	                        				resp = resp.NeutronError;
 	                        			}
 	                        			else{
 	                        				resp = Portal.getText('firewall', 'fwaas-error-remove-rule');
@@ -1104,9 +1112,8 @@ Ext.define('Stackops.portal.plugin.firewall.view.FwaasPluginPanel', {
 					
 			
 					me.createWinPolicy = Ext.create('Ext.window.Window', {
-						title : Portal.getText('firewall', 'fwaas-create-policy'),
-						
-						height : 300,
+						title : Portal.getText('firewall', 'fwaas-create-policy'),						
+						height : me.admin ? 330: 270,
 						width : 670,
 						resizable : false,
 			            closable : true,
@@ -1195,7 +1202,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.FwaasPluginPanel', {
 			
 					me.editWinPolicy = Ext.create('Ext.window.Window', {
 						title : Portal.getText('firewall', 'fwaas-edit-policy'),
-						height : 300,
+						height : me.admin ? 300 : 270,
 						width : 670,
 						resizable : false,
 			            closable : true,
@@ -1252,10 +1259,10 @@ Ext.define('Stackops.portal.plugin.firewall.view.FwaasPluginPanel', {
 								if (response.responseText != null) {
 									resp = Ext.decode(response.responseText, true);
 									if (resp != null && resp.NeutronError != null && resp.NeutronError.message) {
-										resp = resp.NeutronError.message
+										resp = resp.NeutronError.message;
 									} 
 									else if(resp!=null && resp.NeutronError!=null ){
-	                        				resp = resp.NeutronError
+	                        				resp = resp.NeutronError;
 	                        		}
 									else {
 										resp = Portal.getText('firewall', 'fwaas-error-audit-policy').replace('$1', record.get('name'));
@@ -1308,10 +1315,10 @@ Ext.define('Stackops.portal.plugin.firewall.view.FwaasPluginPanel', {
 	                        			resp = Ext.decode(response.responseText, true);
 	                        			if(resp!=null && resp.NeutronError!=null && resp.NeutronError.message)
 	                        			{
-	                        				resp = resp.NeutronError.message
+	                        				resp = resp.NeutronError.message;
 	                        			}
 	                        			else if(resp!=null && resp.NeutronError!=null ){
-	                        				resp = resp.NeutronError
+	                        				resp = resp.NeutronError;
 	                        			}
 	                        			else{
 	                        				resp = Portal.getText('firewall', 'fwaas-error-delete-policy').replace('$1' , record.get('name'));
@@ -1380,7 +1387,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.FwaasPluginPanel', {
 		
 		me.createWinFirewall = Ext.create('Ext.window.Window', {
 			title : Portal.getText('firewall', 'fwaas-create-firewall'),
-			height : 270,
+			height : me.admin? 300 : 270,
 			width : 650,
 			resizable : false,
 			closable : true,
@@ -1429,10 +1436,10 @@ Ext.define('Stackops.portal.plugin.firewall.view.FwaasPluginPanel', {
 	                        			resp = Ext.decode(response.responseText, true);
 	                        			if(resp!=null && resp.NeutronError!=null && resp.NeutronError.message!=null )
 	                        			{
-	                        				resp = resp.NeutronError.message
+	                        				resp = resp.NeutronError.message;
 	                        			}
 	                        			else if(resp!=null && resp.NeutronError!=null ){
-	                        				resp = resp.NeutronError
+	                        				resp = resp.NeutronError;
 	                        			}
 	                        			else{
 	                        				resp = Portal.getText('firewall', 'fwaas-error-delete-firewall').replace('$1', record.get('name'));
