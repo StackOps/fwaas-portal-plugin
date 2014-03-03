@@ -1,3 +1,16 @@
+/*
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+    
+        http://www.apache.org/licenses/LICENSE-2.0
+    
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+*/
 Ext.define('Stackops.portal.plugin.firewall.locale.Language', {
 	languages : {
 		es : {
@@ -245,7 +258,7 @@ Ext.define('Stackops.portal.plugin.firewall.locale.Language', {
 			'fwaas-grid-head-source_port' : 'Puerto Fuente',
 			'fwaas-grid-head-destination_port' : 'Puerto Destino',
 			'fwaas-grid-head-description' : 'Descripción',
-			'fwaas-grid-head-available' : 'Habilitado',
+			'fwaas-grid-head-available' : 'Disponible',
 			'fwaas-grid-head-policy_id' : 'Política Id',
 			'fwaas-grid-head-action' : 'Acción',
 			'fwaas-grid-head-tenant_id' : 'Tenant Id'
