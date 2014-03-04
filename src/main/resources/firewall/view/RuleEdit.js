@@ -1,281 +1,189 @@
+/*
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+    
+        http://www.apache.org/licenses/LICENSE-2.0
+    
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+*/
 Ext.define('Stackops.portal.plugin.firewall.view.RuleEdit', {
-    extend: 'Ext.form.Panel',
-    alias: 'widget.fwaasruleedit',
-    requires:['Stackops.portal.util.JsonFormPanel',
-    'Ext.form.field.Checkbox',
-    'Ext.data.JsonStore',
-    'Ext.data.reader.Json'],
-     
+	extend : 'Ext.form.Panel',
+	alias : 'widget.fwaasruleedit',
+	requires : ['Stackops.portal.util.JsonFormPanel', 'Ext.form.field.Checkbox', 'Ext.data.JsonStore', 'Ext.data.reader.Json'],
+
 	border : false,
-    buttonAlign : 'center',
-  	bodyPadding: 5,
-    layout: 'anchor',
-    align: 'center',
-    defaults: {
-        labelAlign: 'left', 
-        margin : '10 5 10 5',
-        labelWidth : 180,
-        width: 430,
-    },
+	buttonAlign : 'center',
+	bodyPadding : 5,
+	layout : 'anchor',
+	align : 'center',
+	defaults : {
+		labelAlign : 'left',
+		margin : '10 5 10 5',
+		labelWidth : 180,
+		width : 430,
+	},
 
-    // The fields
-   
+	defaultType : 'textfield',
+	initComponent : function() {
+		var me = this;
 
-    
-    defaultType: 'textfield',
-   	initComponent: function() {
-   		var me = this;
-   		
-   		var cidrTest = /^((([0-9])|([1-9][0-9])|([1][0-9][0-9])|([2][0-4][0-9])|(25[0-5]))[.]){3}(([0-9])|([1-9][0-9])|([1][0-9][0-9])|([2][0-4][0-9])|(25[0-5]))(\/([0-9]|[1-2][0-9]|3[0-2])){0,1}$/;
-		Ext.apply(Ext.form.field.VTypes, {
-		    cidr: function(val, field) {
-		        return cidrTest.test(val);
-		    },
-		    cidrText: Portal.getText('firewall', 'rule-edit-vtype-cidr-text'),
-		    cidrMask: /[\d\.\/]/i
+		me.protocolsStore = Ext.create('Ext.data.Store', {
+			fields : ['id', 'name'],
+			data : [{
+				"id" : "tcp",
+				"name" : "TCP"
+			}, {
+				"id" : "udp",
+				"name" : "UDP"
+			}, {
+				"id" : "icmp",
+				"name" : "ICMP"
+			}, {
+				"id" : "any",
+				"name" : "ANY"
+			}]
 		});
-		
-		var portsTest = /^([0-9]|[1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|(65)[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])(:([0-9]|[1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|(65)[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])){0,1}$/;
-		Ext.apply(Ext.form.field.VTypes, {
-		    ports: function(val, field) {
-		        return portsTest.test(val);
-		    },
-		    portsText: Portal.getText('firewall', 'rule-edit-vtype-ports-text'),
-		    portsMask: /[\d\:]/i
+
+		me.actionsStore = Ext.create('Ext.data.Store', {
+			fields : ['id', 'name'],
+			data : [{
+				"id" : "allow",
+				"name" : "ALLOW"
+			}, {
+				"id" : "deny",
+				"name" : "DENY"
+			}]
 		});
-   		
-   		
-   		me.protocolsStore =  Ext.create('Ext.data.Store', {
-        	fields: ['id', 'name'],
-            data : [
-            	{ "id": "tcp", "name" : "TCP" },
-            	{ "id": "udp", "name" : "UDP" },
-            	{ "id": "icmp", "name" : "ICMP" },
-            	{ "id": "any", "name" : "ANY" }
-           	]
-       });
-       
-       me.actionsStore =  Ext.create('Ext.data.Store', {
-        	fields: ['id', 'name'],
-            data : [
-            	{ "id": "allow", "name" : "ALLOW" },
-            	{ "id": "deny", "name" : "DENY" }
-           	]
-       });
-   		
-	    me.items= [
-	    {
-	        fieldLabel: Portal.getText('firewall', 'rule-edit-name'),
-	        emptyText : Portal.getText('firewall', 'emptyText'),
-	        name: 'name',
-	        value : me.record.get('name'),
-	        //labelWidth : 180,
-	        //width : 400,
-	        //margin : '10 5 10 5',  
-	        //fwaasmandatory : true,
-	        allowBlank: false
-	    },
-	        	
-    	];
-    	
-    	
-    	
-    	
-    	
-    	me.protocols_combo = {
-    			xtype : 'combo',
-    			//labelWidth : 180,
-    			//width : 400,
-    			fieldLabel : Portal.getText('firewall', 'rule-edit-protocol'),
-    			displayField: 'name',
-	            valueField: 'id',
-	            value : me.record.get('protocol'),            
-	            forceSelection : true,
-	            allowBlank : false,
-    			queryMode: 'local', 
-	   			typeAhead : true,
-	   			name:'protocol',  
-	   			store : me.protocolsStore,
-	   			//fwaasmandatory : true
-    	};
-    	
-   		me.items.push(me.protocols_combo);
-   		
-   		me.actions_combo = {
-    			xtype : 'combo',
-    			//labelWidth : 180,
-    			//width : 400,
-    			fieldLabel : Portal.getText('firewall', 'rule-edit-action'),
-    			displayField: 'name',
-	            valueField: 'id',
-	            value: me.record.get('action'),            
-	            forceSelection : true,
-	            allowBlank : false,
-    			queryMode: 'local', 
-	   			typeAhead : true,
-	   			name:'action',  
-	   			store : me.actionsStore,
-	   			//fwaasmandatory : true
-    	};
-   		
-   		me.items.push(me.actions_combo);
-   		
-   		me.s_ip = {
-    			xtype : 'textfield',
-    			//labelWidth : 180,
-    			//width : 400,
-    			fieldLabel : Portal.getText('firewall', 'rule-edit-s_address'), 
-	   			name:'s_address',
-	   			vtype: 'cidr',
-	   			value : me.record.get('source_ip_address'),
-    	};
-   		
-   		/*Ext.create('Ext.form.field.Text',{ 
-   			labelWidth : 180,
-   			margin : '10 5 10 5',
-   			fieldLabel: 'Source Ip Address/Subnet', 
-   			name: 's_address', 
-   			helpText: 'source',
-   			//emptyText: Portal.getText('networking', 'networkAddressEx'),
-   			allowBlank: true,
-   			vtype: 'cidr',
-   		});*/
-   		
-   		
-   		me.items.push(me.s_ip);  
-   		
-   		
-   		me.d_ip = {
-    			xtype : 'textfield',
-    			//labelWidth : 180,
-    			//width : 400,
-    			fieldLabel : Portal.getText('firewall', 'rule-edit-d_address'),  
-	   			name : 'd_address',
-	   			vtype : 'cidr',
-	   			value : me.record.get('destination_ip_address'),
-    	};
-   		
 
-   		me.items.push(me.d_ip);
-   		
-   		me.s_port = {
-    			xtype : 'textfield',
-    			//labelWidth : 180,
-    			//width : 400,
-    			fieldLabel : Portal.getText('firewall', 'rule-edit-s_port'),   
-	   			name : 's_port',
-	   			vtype: 'ports',
-	   			value : me.record.get('source_port'),
-    	};
-    	
+		me.items = [{
+			fieldLabel : Portal.getText('firewall', 'rule-edit-name'),
+			emptyText : Portal.getText('firewall', 'emptyText'),
+			name : 'name',
+			value : me.record.get('name'),
+			allowBlank : false
+		}, me.protocols_combo = {
+			xtype : 'combo',
+			fieldLabel : Portal.getText('firewall', 'rule-edit-protocol'),
+			displayField : 'name',
+			valueField : 'id',
+			value : me.record.get('protocol'),
+			forceSelection : true,
+			allowBlank : false,
+			queryMode : 'local',
+			typeAhead : true,
+			name : 'protocol',
+			store : me.protocolsStore
+		}, me.actions_combo = {
+			xtype : 'combo',
+			fieldLabel : Portal.getText('firewall', 'rule-edit-action'),
+			displayField : 'name',
+			valueField : 'id',
+			value : me.record.get('action'),
+			forceSelection : true,
+			allowBlank : false,
+			queryMode : 'local',
+			typeAhead : true,
+			name : 'action',
+			store : me.actionsStore,
+		}, me.s_ip = {
+			xtype : 'textfield',
+			//labelWidth : 180,
+			//width : 400,
+			fieldLabel : Portal.getText('firewall', 'rule-edit-s_address'),
+			name : 's_address',
+			vtype : 'cidr',
+			value : me.record.get('source_ip_address'),
+		}, me.d_ip = {
+			xtype : 'textfield',
+			fieldLabel : Portal.getText('firewall', 'rule-edit-d_address'),
+			name : 'd_address',
+			vtype : 'cidr',
+			value : me.record.get('destination_ip_address'),
+		}, me.s_port = {
+			xtype : 'textfield',
+			fieldLabel : Portal.getText('firewall', 'rule-edit-s_port'),
+			name : 's_port',
+			vtype : 'ports',
+			value : me.record.get('source_port'),
+		}, me.d_port = {
+			xtype : 'textfield',
+			fieldLabel : Portal.getText('firewall', 'rule-edit-d_port'),
+			name : 'd_port',
+			vtype : 'ports',
+			value : me.record.get('destination_port'),
+		}, me.description = Ext.create('Ext.form.field.TextArea', {
 
-   		me.items.push(me.s_port);
-   		
-   		me.d_port = {
-    			xtype : 'textfield',
-    			//labelWidth : 180,
-    			//width : 400,
-    			fieldLabel : Portal.getText('firewall', 'rule-edit-d_port'),
-	   			name : 'd_port',
-	   			vtype: 'ports',
-	   			value : me.record.get('destination_port'),
-    	};
-   		
-   		me.items.push(me.d_port);
-   		
-   		
-   		me.description = Ext.create('Ext.form.field.TextArea',{
-   			
-   			grow : true,
-   			labelWidth : 180,
-   			//width : 400,
-   			//margin : '10 5 10 5',
-   			fieldLabel: Portal.getText('firewall', 'rule-edit-description'), 
-   			name: 'description', 
-   			value : me.record.get('description')
-   		});
-   		me.items.push(me.description);
-   		
-   		
-   		
-   		me.sharedBox =  Ext.create ('Ext.form.field.Checkbox',{
-    		fieldLabel : Portal.getText('firewall', 'rule-edit-shared'),
-           // margin: '2 2 2 2',
-            labelWidth : 180,
-	        margin : '10 5 10 5',  
-            align: 'right',
-            style: 'font-size:11px;',
-            value: me.record.get('shared'),
-            checked : me.record.get('shared'),
-            name : 'shared',
-            /*handler: function(){
-            	 me.checkBoxOn.call(me);
-            },*/
-            scope: me  
-    	});	
-    	me.items.push(me.sharedBox);
-    	
-    	me.enabledBox =  Ext.create ('Ext.form.field.Checkbox',{
-    		fieldLabel : Portal.getText('firewall', 'rule-edit-enabled'),
-            labelWidth : 180,
-	        margin : '10 50 10 5',  
-            align: 'right',
-            style: 'font-size:11px;',
-            value: me.record.get('enabled'),
-            checked : me.record.get('enabled'),
-            name : 'enabled',
-            scope: me  
-    	});	
-    	me.items.push(me.enabledBox);    	
-      	me.callParent(arguments);
-    
-    },
-    
-    
-    
-    
-    
-    
+			grow : true,
+			labelWidth : 180,
+			fieldLabel : Portal.getText('firewall', 'rule-edit-description'),
+			name : 'description',
+			value : me.record.get('description')
+		}), me.sharedBox = Ext.create('Ext.form.field.Checkbox', {
+			fieldLabel : Portal.getText('firewall', 'rule-edit-shared'),
+			labelWidth : 180,
+			margin : '10 5 10 5',
+			align : 'right',
+			style : 'font-size:11px;',
+			value : me.record.get('shared'),
+			checked : me.record.get('shared'),
+			name : 'shared',
+			scope : me
+		}), me.enabledBox = Ext.create('Ext.form.field.Checkbox', {
+			fieldLabel : Portal.getText('firewall', 'rule-edit-enabled'),
+			labelWidth : 180,
+			margin : '10 50 10 5',
+			align : 'right',
+			style : 'font-size:11px;',
+			value : me.record.get('enabled'),
+			checked : me.record.get('enabled'),
+			name : 'enabled',
+			scope : me
+		})];
+		me.callParent(arguments);
 
-    
-    buttons: [{
-        text: Portal.getText('firewall', 'cancel'),
-        handler: function() {
-            this.up('form').up('window').close();
-        }
-    }, {
-    	text : Portal.getText('firewall', 'submit'),        
-        formBind: true,
-        handler: function() {
-            var form = this.up('form').getForm();
-            var me = this.up('form');
-            this.json = {
-            	firewall_rule : {
-	            	name : form.findField('name').getValue(),
-	            	action : form.findField('action').getValue(),
-	            	protocol : form.findField('protocol').getValue(),
-	            	enabled : form.findField('enabled').getValue(),
-	            	shared : form.findField('shared').getValue(),
-	            	description : form.findField('description').getValue()
-	            }
-            }; 
-            
-            if(form.findField('s_address').getValue()==""){
-            	this.json.firewall_rule.source_ip_address = null;
-            }
-            if(form.findField('d_address').getValue()==""){
-            	this.json.firewall_rule.destination_ip_address = null;
-            }
-            if(form.findField('s_port').getValue()==""){
-            	this.json.firewall_rule.source_port = null;
-            }
-            if(form.findField('d_port').getValue()==""){
-            	this.json.firewall_rule.destination_port = null;
-            }
-            
-            
-            
-            
+	},
+	buttons : [{
+		text : Portal.getText('firewall', 'cancel'),
+		handler : function() {
+			this.up('form').up('window').close();
+		}
+	}, {
+		text : Portal.getText('firewall', 'submit'),
+		formBind : true,
+		handler : function() {
+			var form = this.up('form').getForm();
+			var me = this.up('form');
+			var mainPanel = me.section;
+			var treePanel = mainPanel.treePanel;
+			this.json = {
+				firewall_rule : {
+					name : form.findField('name').getValue(),
+					action : form.findField('action').getValue(),
+					protocol : form.findField('protocol').getValue(),
+					enabled : form.findField('enabled').getValue(),
+					shared : form.findField('shared').getValue(),
+					description : form.findField('description').getValue()
+				}
+			};
+
+			if (form.findField('s_address').getValue() == "") {
+				this.json.firewall_rule.source_ip_address = null;
+			}
+			if (form.findField('d_address').getValue() == "") {
+				this.json.firewall_rule.destination_ip_address = null;
+			}
+			if (form.findField('s_port').getValue() == "") {
+				this.json.firewall_rule.source_port = null;
+			}
+			if (form.findField('d_port').getValue() == "") {
+				this.json.firewall_rule.destination_port = null;
+			}
+
 			if (form.isValid()) {
 				Ext.Ajax.request({
 					headers : {
@@ -288,33 +196,13 @@ Ext.define('Stackops.portal.plugin.firewall.view.RuleEdit', {
 					jsonData : this.json,
 					callback : function(options, success, response) {
 						if (success) {
-							this.up('form').section.refresh();
-							this.up('form').up('window').close();
+							me.up('window').close();
+							mainPanel.refresh();
 						} else {
-							if (response.responseText != null) {
-								var resp = Ext.decode(response.responseText, true);
-								if (resp != null && resp.NeutronError != null && resp.NeutronError.message != null) {
-									resp = resp.NeutronError.message;
-								} 
-								else if(resp!=null && resp.NeutronError!=null ){
-	                        		resp = resp.NeutronError
-	                        	}
-								else {
-									resp = Portal.getText('firewall', 'rule-edit-error');
-								}
-							} else {
-								resp = Portal.getText('firewall', 'rule-edit-error');
-							}
-							Ext.Msg.show({
-								msg : resp,
-								icon : Ext.Msg.ERROR,
-								buttons : Ext.Msg.OK,
-								fn : function() {
-								},
-								scope : this
-							});
-							this.up('form').section.refresh();
-							this.up('form').up('window').close();
+							var msg = Portal.getText('firewall', 'rule-edit-error');
+							mainPanel.errorMsgs(msg, response);
+							me.up('window').close();
+							mainPanel.refresh();
 						}
 					},
 					scope : this
@@ -322,8 +210,6 @@ Ext.define('Stackops.portal.plugin.firewall.view.RuleEdit', {
 
 			}
 
-        }
-    }]
-     
+		}
+	}]
 });
-  	

@@ -1,13 +1,26 @@
+/*
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+    
+        http://www.apache.org/licenses/LICENSE-2.0
+    
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+*/
 .fwplugin-shortcut {
-    background-image: url(../images/fw_48.png) !important;
+	background-image: url(../images/fw_48.png) !important;
 }
 
 .fwplugin-icon {
-     background-image: url(../images/fw_16.png) !important;
+	background-image: url(../images/fw_16.png) !important;
 }
 
 .firewall-ver {
-     background-image: url(../images/ver.png) !important;
+	background-image: url(../images/ver.png) !important;
 }
 .fw-create-icon {
 	background-image: url(../images/fw-create.png) !important;
@@ -24,10 +37,6 @@
 }
 .fw-ok-icon {
 	background-image: url(../images/fw-ok.png) !important;
-}
-
-.fw-edit-icon {
-	background-image: url(../images/edit_16x16.png) !important;
 }
 
 .fw-port-icon {
@@ -50,59 +59,50 @@
 	background-image: url(../images/ruler-delete-icon.png) !important;
 }
 
-.rule-edit-icon {
-	background-image: url(../images/ruler-edit-icon.png) !important;
-	
-}
 
 .rule-icon {
 	background-image: url(../images/ruler-icon.png) !important;
 }
 
-.firewall-item{
+.firewall-item {
 	background-image: url(../images/fw-item.png) !important;
 }
 
-
-.background-contianer{
+.background-contianer {
 	background-color: #E9E9E9 !important;
 	padding: 5px 5px 5px 16px !important;
 	background: #E9E9E9 !important;
 }
 
-
-.fwaas-container-white-icon{
-	background : white;
+.fwaas-container-white-icon {
+	background: white;
 }
 
-.fwaas-create-icon{
+.fwaas-create-icon {
 	background-image: url(../images/fw-create-icon.png) !important;
 }
 
-.fwaas-delete-icon{
+.fwaas-delete-icon {
 	background-image: url(../images/fw-delete-icon.png) !important;
 }
 
-.fwaas-edit-icon{
-	background-image: url(../images/fw-edit-icon.png) !important;
+.fwaas-edit-icon, .policy-edit-icon, .fw-edit-icon, .rule-edit-icon{
+	background-image: url(../images/edit_16x16.png) !important;
 }
 
-.policy-create-icon{
+.policy-create-icon {
 	background-image: url(../images/policy-create-icon.png) !important;
 }
 
-.policy-delete-icon{
+.policy-delete-icon {
 	background-image: url(../images/policy-delete-icon.png) !important;
 }
 
-.policy-edit-icon{
-	background-image: url(../images/policy-edit-icon.png) !important;
-}
 
-.policy-add-rule{
+.policy-add-rule {
 	background-image: url(../images/policy-add-rule-icon.png) !important;
 }
-.policy-remove-rule{
+.policy-remove-rule {
 	background-image: url(../images/policy-remove-rule-icon.png) !important;
 }
 .policy-icon {
@@ -112,26 +112,24 @@
 .tree-icons {
 	background-image: url(../images/head-arrow.png) !important;
 	background-repeat: no-repeat;
-
 }
 
-.fwaas-container-white-icon{
-        background : white !important;
+.fwaas-container-white-icon {
+	background: white !important;
 }
 
-.audit-icon{
+.audit-icon {
 	background-image: url(../images/audited.png) !important;
 }
 
-.enable-rule-icon{
+.enable-rule-icon {
 	background-image: url(../images/enable.png) !important;
 }
 
-.disable-rule-icon{
+.disable-rule-icon {
 	background-image: url(../images/disable.png) !important;
 }
 
-.firewall-info-detail{
+.firewall-info-detail {
 	background-image: url(../images/detail_16x16.png) !important;
 }
-

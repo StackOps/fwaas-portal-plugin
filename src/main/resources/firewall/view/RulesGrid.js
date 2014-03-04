@@ -1,3 +1,16 @@
+/*
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+    
+        http://www.apache.org/licenses/LICENSE-2.0
+    
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+*/
 Ext.define('Stackops.portal.plugin.firewall.view.RulesGrid', {
     extend : 'Ext.grid.Panel',
     alias : 'widget.rulesrid',
@@ -11,9 +24,12 @@ Ext.define('Stackops.portal.plugin.firewall.view.RulesGrid', {
    	'Ext.toolbar.Toolbar',   		
    	'Ext.data.Store',
     ],
-   
+   	viewConfig: {
+   		loadMask : false,
+		loadingText: undefined
+	},
    //layout: 'fit',
-  layout : {
+  	layout : {
     	type: 'anchor',
     	align: 'stretch'
     },
@@ -42,7 +58,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.RulesGrid', {
             	align : 'center',
             	renderer : function(value){
             		if(value==""||value==undefined||value==null)
-            			return  '<img align="middle" src="plugin/static/firewall/images/fw-ok.png">' 
+            			return  '<img align="middle" src="plugin/static/firewall/images/fw-ok.png">';
             	}
             },
             {
@@ -55,10 +71,10 @@ Ext.define('Stackops.portal.plugin.firewall.view.RulesGrid', {
             	dataIndex : 'action',
             	renderer : function(value){
             		if(value=="allow"){
-            			return  '<img align="left" src="plugin/static/firewall/images/allow-icon.png">'+ value
+            			return  '<img align="left" src="plugin/static/firewall/images/allow-icon.png">'+ value;
             		}
             		else{
-            			return  '<img align="left" src="plugin/static/firewall/images/deny-icon.png">' + value
+            			return  '<img align="left" src="plugin/static/firewall/images/deny-icon.png">' + value;
             		}
             	}        	
             },
@@ -68,7 +84,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.RulesGrid', {
             	align : 'center',
             	renderer : function(value){
             		if(value)
-            			return  '<img align="middle" src="plugin/static/firewall/images/fw-ok.png">' 
+            			return  '<img align="middle" src="plugin/static/firewall/images/fw-ok.png">';
             	}
             },
             {
@@ -126,7 +142,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.RulesGrid', {
     },
     dbClick : function(grid, record, item, index, e, eOpts ){
     	var me = this;
-    	me.section.section.detailsCall.call(me.section.section);
+    	me.section.section.details.call(me.section.section);
     },
     
     onContextMenu : function(grid, record, item, index, event, opts){
@@ -137,7 +153,6 @@ Ext.define('Stackops.portal.plugin.firewall.view.RulesGrid', {
     	me.section.section.fwCreateR.setVisible(false);
 		me.section.section.fwDeleteR.setVisible(false);
 		me.section.section.fwEditR.setVisible(false);
-		me.section.section.ruleCreateR.setVisible(true);
 		me.section.section.ruleDeleteR.setVisible(true);
 		me.section.section.ruleEditR.setVisible(true);
 		me.section.section.policyCreateR.setVisible(false);
@@ -148,10 +163,10 @@ Ext.define('Stackops.portal.plugin.firewall.view.RulesGrid', {
 		me.section.section.auditPolicyR.setVisible(false);
 		me.section.section.detailsR.setVisible(true);
 		me.section.section.detailspR.setVisible(false);
-		me.section.section.detailsfR.setVisible(true);
+		me.section.section.detailsfR.setVisible(false);
 		if(record.get('enabled'))	{
 			me.section.section.disableRuleR.setVisible(true);
-			me.section.section.enableRuleR.setVisible(false)
+			me.section.section.enableRuleR.setVisible(false);
 		}
 		else{
 			 me.section.section.enableRuleR.setVisible(true);
@@ -183,7 +198,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.RulesGrid', {
 			me.section.section.ruleDeleteB.setVisible(true);
 			if(record.get('enabled'))	{
 				me.section.section.disableRuleB.setVisible(true);
-				me.section.section.enableRuleB.setVisible(false)
+				me.section.section.enableRuleB.setVisible(false);
 			}
 			else{
 				 me.section.section.enableRuleB.setVisible(true);
@@ -217,7 +232,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.RulesGrid', {
    
     
     
-     ipKind : function(value){
+    ipKind : function(value){
     	var me = this;
     	//return '<div><p style="float: left;"><img src="plugin/static/firewall/images/fw-ip.png" ></p> <p>\t' + value +'</p></div>'
     	if(value!=null && value!="")
@@ -226,7 +241,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.RulesGrid', {
     
     shared : function(value){
     	if(value){
-    		return  '<img align="middle" src="plugin/static/firewall/images/fw-shared.png">' 
+    		return  '<img align="middle" src="plugin/static/firewall/images/fw-shared.png">';
     	}
     },
     

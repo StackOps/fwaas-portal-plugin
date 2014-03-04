@@ -1,3 +1,16 @@
+/*
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+    
+        http://www.apache.org/licenses/LICENSE-2.0
+    
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+*/
 Ext.define('Stackops.portal.plugin.firewall.view.PolicyGrid', {
     extend : 'Ext.grid.Panel',
     alias : 'widget.policygrid',
@@ -15,21 +28,15 @@ Ext.define('Stackops.portal.plugin.firewall.view.PolicyGrid', {
    	'Ext.data.Store',
     ],
     layout: 'fit',
-    /*layout : {
-    	type: 'anchor',
-    	align: 'stretch'
-    },*/
     anchor : '100%',
     initComponent: function(){
-    	var me = this;
-    	
-    	
+    	var me = this;    	
     	me.store = Ext.create('Ext.data.Store', {
 		    model: 'Stackops.portal.plugin.firewall.model.Rules',
 		    proxy   : {type    : 'memory'}, 
-		    data : []
+		    data : [],
+		    sorters : ['position']
 		});
-		
 		
 		me.rules_store = Ext.create('Stackops.portal.plugin.firewall.store.Rules');
 		me.policy_store = Ext.create('Stackops.portal.plugin.firewall.store.Policy');		
@@ -39,12 +46,8 @@ Ext.define('Stackops.portal.plugin.firewall.view.PolicyGrid', {
     	
     	me.mon(me.rules_store, 'load', me.onLoadRules, me);
     	me.mon(me.policy_store, 'load', me.onLoadPolicy, me);
-		
-    	
 		me.columns = [
-            {   
-            	//xtype: 'treecolumn',  
-            	//sortable: true,         	
+            {        	
             	header: Portal.getText('firewall', 'fwaas-grid-head-name'),
             	dataIndex: 'name',    
             }, 
@@ -53,20 +56,32 @@ Ext.define('Stackops.portal.plugin.firewall.view.PolicyGrid', {
             	dataIndex: 'id'
             },
             {
+            	header : Portal.getText('firewall', 'fwaas-grid-head-action'),
+            	dataIndex : 'action',
+            	renderer : function(value){
+            		if(value=="allow"){
+            			return  '<img align="left" src="plugin/static/firewall/images/allow-icon.png">'+ value;
+            		}
+            		else{
+            			return  '<img align="left" src="plugin/static/firewall/images/deny-icon.png">' + value;
+            		}
+            	}        	
+            },
+            {
             	header: Portal.getText('firewall', 'fwaas-grid-head-enabled'),
             	dataIndex: 'enabled',
             	align : 'center',
             	renderer : function(value){
             		if(value)
-            			return  '<img align="left" src="plugin/static/firewall/images/fw-ok.png">' 
+            			return  '<img align="middle" src="plugin/static/firewall/images/fw-ok.png">';
             	}
             },
             {
             	header: Portal.getText('firewall', 'fwaas-grid-head-shared'),
             	dataIndex: 'shared',
+            	align :'center',
             	renderer : me.shared
             },
-            
             {
             	header: Portal.getText('firewall', 'fwaas-grid-head-position'),
             	dataIndex: 'position'
@@ -106,8 +121,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.PolicyGrid', {
             {
             	header: Portal.getText('firewall', 'fwaas-grid-head-tenant_id'),
             	dataIndex: 'tenant_id'
-            },          
-            
+            }            
     	];
     	
     	me.mon(me,'itemcontextmenu',me.onContextMenu, me);
@@ -119,7 +133,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.PolicyGrid', {
     },
     dbClick : function(grid, record, item, index, e, eOpts ){
     	var me = this;
-    	me.section.section.detailsCall.call(me.section.section);
+    	me.section.section.details.call(me.section.section);
     },
     
     onLoadPolicy : function(store, records, siccess){
@@ -168,7 +182,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.PolicyGrid', {
     			destination_port : record.get('destination_por'),
     			firewall_rules : record.get('firewall_rules'),
     			position : record.get('position')
-    		}
+    		};
     		
     		me.rules_collection.add(record.get('id'), rules);
     	});
@@ -215,7 +229,6 @@ Ext.define('Stackops.portal.plugin.firewall.view.PolicyGrid', {
     	me.section.section.fwCreateR.setVisible(false);
 		me.section.section.fwDeleteR.setVisible(false);
 		me.section.section.fwEditR.setVisible(false);
-		me.section.section.ruleCreateR.setVisible(false);
 		me.section.section.ruleDeleteR.setVisible(false);
 		me.section.section.ruleEditR.setVisible(false);
 		me.section.section.policyCreateR.setVisible(false);
@@ -229,7 +242,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.PolicyGrid', {
 		me.section.section.detailsfR.setVisible(false);
 		if(record.get('enabled'))	{
 			me.section.section.disableRuleR.setVisible(true);
-			me.section.section.enableRuleR.setVisible(false)
+			me.section.section.enableRuleR.setVisible(false);
 		}
 		else{
 			 me.section.section.enableRuleR.setVisible(true);
@@ -264,7 +277,7 @@ Ext.define('Stackops.portal.plugin.firewall.view.PolicyGrid', {
 			me.section.section.detailsB.setVisible(true);
 			if(record.get('enabled'))	{
 				me.section.section.disableRuleB.setVisible(true);
-				me.section.section.enableRuleB.setVisible(false)
+				me.section.section.enableRuleB.setVisible(false);
 			}
 			else{
 				 me.section.section.enableRuleB.setVisible(true);
@@ -289,14 +302,13 @@ Ext.define('Stackops.portal.plugin.firewall.view.PolicyGrid', {
     
     shared : function(value){
     	if(value){
-    		return  '<img align="left" src="plugin/static/firewall/images/fw-shared.png">' 
+    		return  '<img align="left" src="plugin/static/firewall/images/fw-shared.png">' ;
     	}
     },
     
     portValue : function(value){
     	if(value!=null && value !="")
     		return '<img align="left" src="plugin/static/firewall/images/port_16.png">\t' +value;
-    }
-    
+    }   
 
 });
